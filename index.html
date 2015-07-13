@@ -231,51 +231,6 @@
 
 
   
-    <article id="post-dispath_group" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/07/dispath_group/" class="article-date">
-  	<time datetime="2015-07-07T06:08:48.000Z" itemprop="datePublished">7月 7 2015</time>
-</a>
-      
-      
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/07/dispath_group/">dispath_group</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>NSMutableArray *mutableArray = [@[] mutableCopy];<br>dispatch_group_t serviceGroup = dispatch_group_create();</p>
-<p>dispatch_group_enter(serviceGroup);<br>[[WTAPIClient sharedClient] fetchCommentsByBlogID:_blog.blogID<br>start:startIndex.integerValue<br>count:20<br>success:^(WTObjectArray <em>array) {<br>[mutableArray insertObject:array atIndex:0];<br>dispatch_group_leave(serviceGroup);<br>}<br>failure:^(NSError </em>error) {<br>[weakSelf handleError:error];<br>[mutableArray insertObject:[WTObjectArray new] atIndex:0];<br>dispatch_group_leave(serviceGroup);<br>}];</p>
-<p>dispatch_group_enter(serviceGroup);<br>[[WTAPIClient sharedClient] fetchLoversWithBlogId:_blog.blogID<br>start:startIndex.integerValue<br>limit:20<br>success:^(WTObjectArray <em>array) {<br>[mutableArray addObject:array];<br>dispatch_group_leave(serviceGroup);<br>} failure:^(NSError </em>error) {<br>[weakSelf handleError:error];<br>[mutableArray addObject:[WTObjectArray new]];<br>dispatch_group_leave(serviceGroup);<br>}];</p>
-<p>dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^{<br>// Assess any errors<br>NSError *overallError = nil;</p>
-<p>successBlock(mutableArray);<br>// Now call the final completion block<br>});</p>
-
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
     <article id="post-navigtion-push-pop-block" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -675,11 +630,11 @@
 
 
   
-    <article id="post-Python征途1" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-解决UIGesture和tableViewCell点击事件的冲突" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/01/15/Python征途1/" class="article-date">
-  	<time datetime="2015-01-15T10:02:35.000Z" itemprop="datePublished">1月 15 2015</time>
+      <a href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/" class="article-date">
+  	<time datetime="2015-01-15T09:10:37.000Z" itemprop="datePublished">1月 15 2015</time>
 </a>
       
   <div class="article-category">
@@ -687,7 +642,7 @@
   </div>
 
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
 
     </div>
   
@@ -700,7 +655,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/15/Python征途1/">Python征途1</a>
+      <a class="article-title" href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/">解决UIGesture和tableViewCell点击事件的冲突</a>
     </h1>
   
 
@@ -708,8 +663,63 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>首先我使用的是Mac本，使用的工具是<a href="http://macromates.com/" target="_blank" rel="external">TextMate</a>，一般Mac OS会自带Python，但是版本很低，建议<a href="http://jingyan.baidu.com/article/14bd256e39b63dbb6d261289.html" target="_blank" rel="external">升级</a>，升级不一定要拆卸老版本的Python，可以只改Path路径就可以。<br>2.x和3.x的Python还是有差别，<br>比如2.x版本语法 print ‘hello world’，更新后运行就告诉我语法错误，<br>3.x应该为 print(‘hello world’)<br><br><br>如果你是一名apple开发者，千万不要删除2.7版本，因为Xcode需要它的支持。<br>。<br>开始练习<br>打开你的终端，输入python，然后看见一些版本信息，也可以看到下面出现了可以输入python代码的提示，好把，输入 print(‘hello world’),回车。<br>可以看到输出的”hello world”</p>
-<p>再新建一个文本一helloworld.py，输入print(‘hello world’)，保存。在终端输入python (路径)/helloworld.py,可以看到终端运行了这个脚本。</p>
+        <p>当你给一个controller的view加了手势之后发现tableViewCell不回接收到响应，因为响应被view拦截</p>
+<pre><code class="bash"><span class="comment">#pragma mark - UIGestureRecognizerDelegate</span>
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    // 输出点击的view的类名
+    NSLog(@<span class="string">"%@"</span>, NSStringFromClass([touch.view class]));
+
+    // 若为UITableViewCellContentView（即点击了tableViewCell），则不截获Touch事件
+    <span class="keyword">if</span> ([NSStringFromClass([touch.view class]) isEqualToString:@<span class="string">"UITableViewCellContentView"</span>]) {
+        <span class="built_in">return</span> NO;
+    }
+    <span class="built_in">return</span>  YES;
+}
+</code></pre>
+
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
+    <article id="mytext-des加密" class="article article-type-mytext" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/01/11/des加密/" class="article-date">
+  	<time datetime="2015-01-11T13:18:52.000Z" itemprop="datePublished">1月 11 2015</time>
+</a>
+      
+      
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/01/11/des加密/">des加密</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近做了两个项目一个是外包（北美的一个教育软件），还有就是我们的创业项目。这两个项目中在数据传输方面我们都用了des加密，感觉很好用就记下了。</p>
+<h2 id="加密方式">加密方式</h2><p>客户端每次登录时会向服务器发送一个唯一token，服务器根据当前session返回给客户端一个字符串，再由客户端根据key和session合成一个des加密解密的一个key。在这登录以后与服务器的所有网络请求都需要发送给服务器这个key，因为服务器知道这个唯一的token和那个session串，所以他可以根据这个key解密你发送的已经加密的网络数据。</p>
+<h2 id="平台差异性">平台差异性</h2><p>不同平台的加密可能会出现一些差异<br>第一个项目是php，android（java），iOS平台组合<br><br>iOS端<a href="/downLoadData/DES/NSString+DES.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
 
       
     </div>

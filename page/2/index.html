@@ -190,109 +190,6 @@
 </nav>
       
   
-    <article id="post-解决UIGesture和tableViewCell点击事件的冲突" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/" class="article-date">
-  	<time datetime="2015-01-15T09:10:37.000Z" itemprop="datePublished">1月 15 2015</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/">解决UIGesture和tableViewCell点击事件的冲突</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>当你给一个controller的view加了手势之后发现tableViewCell不回接收到响应，因为响应被view拦截</p>
-<pre><code class="bash"><span class="comment">#pragma mark - UIGestureRecognizerDelegate</span>
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    // 输出点击的view的类名
-    NSLog(@<span class="string">"%@"</span>, NSStringFromClass([touch.view class]));
-
-    // 若为UITableViewCellContentView（即点击了tableViewCell），则不截获Touch事件
-    <span class="keyword">if</span> ([NSStringFromClass([touch.view class]) isEqualToString:@<span class="string">"UITableViewCellContentView"</span>]) {
-        <span class="built_in">return</span> NO;
-    }
-    <span class="built_in">return</span>  YES;
-}
-</code></pre>
-
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="mytext-des加密" class="article article-type-mytext" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/01/11/des加密/" class="article-date">
-  	<time datetime="2015-01-11T13:18:52.000Z" itemprop="datePublished">1月 11 2015</time>
-</a>
-      
-      
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/11/des加密/">des加密</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近做了两个项目一个是外包（北美的一个教育软件），还有就是我们的创业项目。这两个项目中在数据传输方面我们都用了des加密，感觉很好用就记下了。</p>
-<h2 id="加密方式">加密方式</h2><p>客户端每次登录时会向服务器发送一个唯一token，服务器根据当前session返回给客户端一个字符串，再由客户端根据key和session合成一个des加密解密的一个key。在这登录以后与服务器的所有网络请求都需要发送给服务器这个key，因为服务器知道这个唯一的token和那个session串，所以他可以根据这个key解密你发送的已经加密的网络数据。</p>
-<h2 id="平台差异性">平台差异性</h2><p>不同平台的加密可能会出现一些差异<br>第一个项目是php，android（java），iOS平台组合<br><br>iOS端<a href="/downLoadData/DES/NSString+DES.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
-
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
     <article id="post-Xcode插件" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -798,6 +695,99 @@ sh /Library/Tomcat/bin/startup.sh
 <p><span style="font-size: 14px; color: rgb(0, 128, 0);">工程demo</span></p>
 <p><a href="/downLoadData/iphone_shi_pei.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
 </div></div></div>
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
+    <article id="post-获取所有安装的app" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/10/31/获取所有安装的app/" class="article-date">
+  	<time datetime="2014-10-30T16:02:20.000Z" itemprop="datePublished">10月 31 2014</time>
+</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/31/获取所有安装的app/">获取所有安装的app</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <pre><code class="bash"><span class="comment">#include &lt;objc/runtime.h&gt;</span>
+Class LSApplicationWorkspace_class = objc_getClass(<span class="string">"LSApplicationWorkspace"</span>);
+NSObject* workspace = [LSApplicationWorkspace_class performSelector:@selector(defaultWorkspace)];
+NSLog(@<span class="string">"apps: %@"</span>, [workspace performSelector:@selector(allApplications)]);
+</code></pre>
+
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
+    <article id="post-获得当前时区时间" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/10/30/获得当前时区时间/" class="article-date">
+  	<time datetime="2014-10-30T15:00:53.000Z" itemprop="datePublished">10月 30 2014</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/30/获得当前时区时间/">获得当前时区时间</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSDate *date = [NSDate date];&#10;&#10;NSTimeZone *zone = [NSTimeZone systemTimeZone];&#10;&#10;NSInteger interval = [zone secondsFromGMTForDate: date];&#10;&#10;NSDate *localeDate = [targetDate  dateByAddingTimeInterval:interval];</span><br></pre></td></tr></table></figure>
       
     </div>
   </div>

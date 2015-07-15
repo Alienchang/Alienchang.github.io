@@ -185,7 +185,7 @@
   
     <div class="article-meta">
       <a href="/2015/07/15/iOS开发规范/" class="article-date">
-  	<time datetime="2015-07-15T09:23:26.000Z" itemprop="datePublished">7月 15 2015</time>
+  	<time datetime="2015-07-15T09:36:54.000Z" itemprop="datePublished">7月 15 2015</time>
 </a>
       
       
@@ -202,9 +202,7 @@
 <span class="number">2</span>、小的图片资源直接放到assets中，大一些的比如启动页面放在指定文件夹中。
 <span class="number">3</span>、自己封装的类放在Util中，第三方的工具类放到Librarys中
 <span class="number">4</span>、通用的常量写在AppConst中
-</code></pre><h5 id="二、类规范">二、类规范</h5><pre><code><span class="number">1</span>、使用 <span class="id">#pragma</span> <span class="tag">mark</span> - 来标记模块，例如tableViewDelegate一定要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -UITableView Delegate，不要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -tableView Delegate。
-<span class="number">2</span>、属性的初始化尽量在getter方法中完成。
-</code></pre><h5 id="三、命名">三、命名</h5><pre><code><span class="number">1</span>、类命名：
+</code></pre><h5 id="二、类规范">二、类规范</h5><pre><code><span class="number">1</span>、类命名：
 新建类的命名按照驼峰命名法，不要与现有文件名相似、并且尽量描述类作用，类名如果不多于<span class="number">30</span>个字节不可以使用缩写。严禁使用下划线。对于系统的常用类作实例变量声明时加入后缀。
 例：WTHeaderImageView
 例：WTBaseDataSource
@@ -231,7 +229,7 @@
         <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kRecommendMatchesKey     = <span class="string">@"recommendMatchesKey"</span>;
         <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kRecentWeatherPath       = <span class="string">@"recentWeatherCache"</span>;
         <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kMyYueMatchKey           = <span class="string">@"myYueMatchKey"</span>;
-</code></pre><h5 id="四、注释">四、注释</h5><pre><code>1、统一使用VVDocument插件
+</code></pre><h5 id="三、注释">三、注释</h5><pre><code>1、统一使用VVDocument插件
 /<span class="keyword">*</span><span class="keyword">*</span>
  <span class="keyword">*</span>  <span class="variable">&lt;#Description#&gt;</span>
  <span class="keyword">*</span>
@@ -245,10 +243,13 @@
 4、.h文件开头处简要介绍类作用
 5、文档导出工具可使用appledoc
 </code></pre><p>   详见 <a href="http://www.devtang.com/blog/2012/02/01/use-appledoc-to-generate-xcode-doc/" target="_blank" rel="external">http://www.devtang.com/blog/2012/02/01/use-appledoc-to-generate-xcode-doc/</a></p>
-<h5 id="五、编码规范">五、编码规范</h5><pre><code>1、方法中尽量不要使用明文字符串
-2、正常方法中代码不要超过30行，必要可以宽限到50行
-3、测试中的<span class="keyword">log</span>方法用完即删
-4、不需要暴露的属性和变量尽量写在.<span class="keyword">m</span>文件中。
+<h5 id="四、编码规范">四、编码规范</h5><pre><code><span class="number">1</span>、方法中尽量不要使用明文字符串
+<span class="number">2</span>、正常方法中代码不要超过<span class="number">30</span>行，必要可以宽限到<span class="number">50</span>行
+<span class="number">3</span>、测试中的log方法用完即删
+<span class="number">4</span>、不需要暴露的属性和变量尽量写在.m文件中。
+<span class="number">5</span>、等号等运算符号左右各空一格   例：<span class="tag">a</span> == <span class="tag">b</span> 、 <span class="tag">a</span> = <span class="tag">b</span> 、 <span class="tag">a</span> &amp;&amp; <span class="tag">b</span>
+<span class="number">5</span>、使用 <span class="id">#pragma</span> <span class="tag">mark</span> - 来标记模块，例如tableViewDelegate一定要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -UITableView Delegate，不要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -tableView Delegate
+<span class="number">6</span>、属性的初始化尽量在getter方法中完成
 </code></pre>
       
     </div>

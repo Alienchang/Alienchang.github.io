@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Alienchang’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="iOS开发规范一、文档结构1、如果是新功能、模块、或者是独立的library，需要新建folder，然后拖进工程，不要单单只新建group。
+2、小的图片资源直接放到assets中，大一些的比如启动页面放在指定文件夹中。
+3、自己封装的类放在Util中，第三方的工具类放到Librarys中
+4、通用的常量写在AppConst中
+二、类规范1、使用 #pragma mark - 来标记模块，例如ta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alienchang’s Blog">
+<meta property="og:url" content="http://yoursite.com/2015/07/15/iOS开发规范/index.html">
+<meta property="og:site_name" content="Alienchang’s Blog">
+<meta property="og:description" content="iOS开发规范一、文档结构1、如果是新功能、模块、或者是独立的library，需要新建folder，然后拖进工程，不要单单只新建group。
+2、小的图片资源直接放到assets中，大一些的比如启动页面放在指定文件夹中。
+3、自己封装的类放在Util中，第三方的工具类放到Librarys中
+4、通用的常量写在AppConst中
+二、类规范1、使用 #pragma mark - 来标记模块，例如ta">
+<meta property="og:updated_time" content="2015-07-15T09:23:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Alienchang’s Blog">
+<meta name="twitter:description" content="iOS开发规范一、文档结构1、如果是新功能、模块、或者是独立的library，需要新建folder，然后拖进工程，不要单单只新建group。
+2、小的图片资源直接放到assets中，大一些的比如启动页面放在指定文件夹中。
+3、自己封装的类放在Util中，第三方的工具类放到Librarys中
+4、通用的常量写在AppConst中
+二、类规范1、使用 #pragma mark - 来标记模块，例如ta">
+  
+  
+    <link rel="icon" href="/placeholder.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+  <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<div class="profilepic">
+			<img src="/img/header.jpeg">
+		</div>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Alienchang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">不急不躁，勇往直前</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/技术">Objective-C</a></li>
+				        
+							<li><a href="/categories/Xcode">Xcode</a></li>
+				        
+							<li><a href="/instagram">相册</a></li>
+				        
+							<li><a href="/about">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Alienchang" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/2763472470/profile?topnav=1&wvr=6" title="weibo">weibo</a>
+					        
+								<a class="facebook" target="_blank" href="https://www.facebook.com/profile.php?id=100003995623398" title="facebook">facebook</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud">
+						<a href="/tags/Xcode/" style="font-size: 14px;">Xcode</a> <a href="/tags/code/" style="font-size: 10px;">code</a> <a href="/tags/ios/" style="font-size: 20px;">ios</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/xcode/" style="font-size: 12px;">xcode</a> <a href="/tags/小知识/" style="font-size: 18px;">小知识</a> <a href="/tags/技术/" style="font-size: 16px;">技术</a> <a href="/tags/服务器/" style="font-size: 10px;">服务器</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://iostang.github.io">唐先森的博客</a>
+			        
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+<a href="https://github.com/you"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"></a>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay"></div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img src="/img/header.jpeg">
+			</div>
+
+			<hgroup>
+			  <h1 class="header-author"><a href="/">Alienchang</a></h1>
+			</hgroup>
+			
+			<p class="header-subtitle">不急不躁，勇往直前</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/技术">Objective-C</a></li>
+		        
+					<li><a href="/categories/Xcode">Xcode</a></li>
+		        
+					<li><a href="/instagram">相册</a></li>
+		        
+					<li><a href="/about">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Alienchang" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/2763472470/profile?topnav=1&wvr=6" title="weibo">weibo</a>
+			        
+						<a class="facebook" target="_blank" href="https://www.facebook.com/profile.php?id=100003995623398" title="facebook">facebook</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <article id="post-iOS开发规范" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/07/15/iOS开发规范/" class="article-date">
+  	<time datetime="2015-07-15T09:23:26.000Z" itemprop="datePublished">7月 15 2015</time>
+</a>
+      
+      
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="iOS开发规范"><div align="center">iOS开发规范</div></h2><h5 id="一、文档结构">一、文档结构</h5><pre><code><span class="number">1</span>、如果是新功能、模块、或者是独立的<span class="keyword">library</span>，需要新建folder，然后拖进工程，不要单单只新建<span class="keyword">group</span>。
+<span class="number">2</span>、小的图片资源直接放到assets中，大一些的比如启动页面放在指定文件夹中。
+<span class="number">3</span>、自己封装的类放在Util中，第三方的工具类放到Librarys中
+<span class="number">4</span>、通用的常量写在AppConst中
+</code></pre><h5 id="二、类规范">二、类规范</h5><pre><code><span class="number">1</span>、使用 <span class="id">#pragma</span> <span class="tag">mark</span> - 来标记模块，例如tableViewDelegate一定要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -UITableView Delegate，不要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -tableView Delegate。
+<span class="number">2</span>、属性的初始化尽量在getter方法中完成。
+</code></pre><h5 id="三、命名">三、命名</h5><pre><code><span class="number">1</span>、类命名：
+新建类的命名按照驼峰命名法，不要与现有文件名相似、并且尽量描述类作用，类名如果不多于<span class="number">30</span>个字节不可以使用缩写。严禁使用下划线。对于系统的常用类作实例变量声明时加入后缀。
+例：WTHeaderImageView
+例：WTBaseDataSource
+
+<span class="number">2</span>、变量命名：
+
+    （<span class="number">1</span>）属性：头字母小写，同样驼峰命名，不可以使用下划线，尽量不要使用缩写。属性列表尽量保持对齐美观。
+        例：
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDictionary</span>          *rawData;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span>        *dataArray;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSNumber</span>              *nextStart;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">BOOL</span>                  hasNextPage;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>)   WTBaseViewController  *controller;
+
+    （<span class="number">2</span>）成员变量：以下划线开头，其他同属性，列表也保持对齐。
+        例：
+            <span class="class"><span class="keyword">@interface</span> <span class="title">WTClubContentViewController</span> ()</span>{
+                <span class="built_in">BOOL</span> _canRefresh;
+                <span class="built_in">BOOL</span> _showNoDataView;
+            }
+
+     （<span class="number">3</span>）全局静态字符串：以小写的k开头，其余同属性。
+        例：
+        <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kRecommendMatchesKey     = <span class="string">@"recommendMatchesKey"</span>;
+        <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kRecentWeatherPath       = <span class="string">@"recentWeatherCache"</span>;
+        <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kMyYueMatchKey           = <span class="string">@"myYueMatchKey"</span>;
+</code></pre><h5 id="四、注释">四、注释</h5><pre><code>1、统一使用VVDocument插件
+/<span class="keyword">*</span><span class="keyword">*</span>
+ <span class="keyword">*</span>  <span class="variable">&lt;#Description#&gt;</span>
+ <span class="keyword">*</span>
+ <span class="keyword">*</span>  <span class="comment">@param nibNameOrNil   &lt;#nibNameOrNil description#&gt;</span>
+ <span class="keyword">*</span>  <span class="comment">@param nibBundleOrNil &lt;#nibBundleOrNil description#&gt;</span>
+ <span class="keyword">*</span>
+ <span class="keyword">*</span>  <span class="comment">@return &lt;#return value description#&gt;</span>
+ <span class="keyword">*</span>/
+2、类中的功能性方法要有70%以上是有注释的，方法中如果有比较复杂的逻辑判断或者数学计算也要添加注释
+3、多使用//TODO: 、//TOFIX: 、<span class="comment">#error &lt;#message#&gt;、#warning &lt;#message#&gt;</span>
+4、.h文件开头处简要介绍类作用
+5、文档导出工具可使用appledoc
+</code></pre><p>   详见 <a href="http://www.devtang.com/blog/2012/02/01/use-appledoc-to-generate-xcode-doc/" target="_blank" rel="external">http://www.devtang.com/blog/2012/02/01/use-appledoc-to-generate-xcode-doc/</a></p>
+<h5 id="五、编码规范">五、编码规范</h5><pre><code>1、方法中尽量不要使用明文字符串
+2、正常方法中代码不要超过30行，必要可以宽限到50行
+3、测试中的<span class="keyword">log</span>方法用完即删
+4、不需要暴露的属性和变量尽量写在.<span class="keyword">m</span>文件中。
+</code></pre>
+      
+    </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/07/08/HTML-source-code-of-a-loaded-UIWebView/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">HTML source code of a loaded UIWebView</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 Alienchang
+    	</div>
+      	<div class="footer-right">
+
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <script src="/js/main.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

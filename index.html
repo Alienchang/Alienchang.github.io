@@ -181,6 +181,87 @@
 </nav>
       
   
+    <article id="post-iOS开发规范" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/07/15/iOS开发规范/" class="article-date">
+  	<time datetime="2015-07-15T09:23:26.000Z" itemprop="datePublished">7月 15 2015</time>
+</a>
+      
+      
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="iOS开发规范"><div align="center">iOS开发规范</div></h2><h5 id="一、文档结构">一、文档结构</h5><pre><code><span class="number">1</span>、如果是新功能、模块、或者是独立的<span class="keyword">library</span>，需要新建folder，然后拖进工程，不要单单只新建<span class="keyword">group</span>。
+<span class="number">2</span>、小的图片资源直接放到assets中，大一些的比如启动页面放在指定文件夹中。
+<span class="number">3</span>、自己封装的类放在Util中，第三方的工具类放到Librarys中
+<span class="number">4</span>、通用的常量写在AppConst中
+</code></pre><h5 id="二、类规范">二、类规范</h5><pre><code><span class="number">1</span>、使用 <span class="id">#pragma</span> <span class="tag">mark</span> - 来标记模块，例如tableViewDelegate一定要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -UITableView Delegate，不要写成 <span class="id">#pragma</span> <span class="tag">mark</span> -tableView Delegate。
+<span class="number">2</span>、属性的初始化尽量在getter方法中完成。
+</code></pre><h5 id="三、命名">三、命名</h5><pre><code><span class="number">1</span>、类命名：
+新建类的命名按照驼峰命名法，不要与现有文件名相似、并且尽量描述类作用，类名如果不多于<span class="number">30</span>个字节不可以使用缩写。严禁使用下划线。对于系统的常用类作实例变量声明时加入后缀。
+例：WTHeaderImageView
+例：WTBaseDataSource
+
+<span class="number">2</span>、变量命名：
+
+    （<span class="number">1</span>）属性：头字母小写，同样驼峰命名，不可以使用下划线，尽量不要使用缩写。属性列表尽量保持对齐美观。
+        例：
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDictionary</span>          *rawData;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span>        *dataArray;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSNumber</span>              *nextStart;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="built_in">BOOL</span>                  hasNextPage;
+        <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">weak</span>)   WTBaseViewController  *controller;
+
+    （<span class="number">2</span>）成员变量：以下划线开头，其他同属性，列表也保持对齐。
+        例：
+            <span class="class"><span class="keyword">@interface</span> <span class="title">WTClubContentViewController</span> ()</span>{
+                <span class="built_in">BOOL</span> _canRefresh;
+                <span class="built_in">BOOL</span> _showNoDataView;
+            }
+
+     （<span class="number">3</span>）全局静态字符串：以小写的k开头，其余同属性。
+        例：
+        <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kRecommendMatchesKey     = <span class="string">@"recommendMatchesKey"</span>;
+        <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kRecentWeatherPath       = <span class="string">@"recentWeatherCache"</span>;
+        <span class="keyword">static</span> <span class="built_in">NSString</span> *<span class="keyword">const</span> kMyYueMatchKey           = <span class="string">@"myYueMatchKey"</span>;
+</code></pre><h5 id="四、注释">四、注释</h5><pre><code>1、统一使用VVDocument插件
+/<span class="keyword">*</span><span class="keyword">*</span>
+ <span class="keyword">*</span>  <span class="variable">&lt;#Description#&gt;</span>
+ <span class="keyword">*</span>
+ <span class="keyword">*</span>  <span class="comment">@param nibNameOrNil   &lt;#nibNameOrNil description#&gt;</span>
+ <span class="keyword">*</span>  <span class="comment">@param nibBundleOrNil &lt;#nibBundleOrNil description#&gt;</span>
+ <span class="keyword">*</span>
+ <span class="keyword">*</span>  <span class="comment">@return &lt;#return value description#&gt;</span>
+ <span class="keyword">*</span>/
+2、类中的功能性方法要有70%以上是有注释的，方法中如果有比较复杂的逻辑判断或者数学计算也要添加注释
+3、多使用//TODO: 、//TOFIX: 、<span class="comment">#error &lt;#message#&gt;、#warning &lt;#message#&gt;</span>
+4、.h文件开头处简要介绍类作用
+5、文档导出工具可使用appledoc
+</code></pre><p>   详见 <a href="http://www.devtang.com/blog/2012/02/01/use-appledoc-to-generate-xcode-doc/" target="_blank" rel="external">http://www.devtang.com/blog/2012/02/01/use-appledoc-to-generate-xcode-doc/</a></p>
+<h5 id="五、编码规范">五、编码规范</h5><pre><code>1、方法中尽量不要使用明文字符串
+2、正常方法中代码不要超过30行，必要可以宽限到50行
+3、测试中的<span class="keyword">log</span>方法用完即删
+4、不需要暴露的属性和变量尽量写在.<span class="keyword">m</span>文件中。
+</code></pre>
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
     <article id="post-HTML-source-code-of-a-loaded-UIWebView" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -668,49 +749,6 @@
     <span class="built_in">return</span>  YES;
 }
 </code></pre>
-
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="mytext-des加密" class="article article-type-mytext" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/01/11/des加密/" class="article-date">
-  	<time datetime="2015-01-11T13:18:52.000Z" itemprop="datePublished">1月 11 2015</time>
-</a>
-      
-      
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/11/des加密/">des加密</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近做了两个项目一个是外包（北美的一个教育软件），还有就是我们的创业项目。这两个项目中在数据传输方面我们都用了des加密，感觉很好用就记下了。</p>
-<h2 id="加密方式">加密方式</h2><p>客户端每次登录时会向服务器发送一个唯一token，服务器根据当前session返回给客户端一个字符串，再由客户端根据key和session合成一个des加密解密的一个key。在这登录以后与服务器的所有网络请求都需要发送给服务器这个key，因为服务器知道这个唯一的token和那个session串，所以他可以根据这个key解密你发送的已经加密的网络数据。</p>
-<h2 id="平台差异性">平台差异性</h2><p>不同平台的加密可能会出现一些差异<br>第一个项目是php，android（java），iOS平台组合<br><br>iOS端<a href="/downLoadData/DES/NSString+DES.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
 
       
     </div>

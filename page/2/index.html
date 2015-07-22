@@ -181,6 +181,66 @@
 </nav>
       
   
+    <article id="post-解决UIGesture和tableViewCell点击事件的冲突" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/" class="article-date">
+  	<time datetime="2015-01-15T09:10:37.000Z" itemprop="datePublished">1月 15 2015</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/">解决UIGesture和tableViewCell点击事件的冲突</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>当你给一个controller的view加了手势之后发现tableViewCell不回接收到响应，因为响应被view拦截</p>
+<pre><code class="bash"><span class="comment">#pragma mark - UIGestureRecognizerDelegate</span>
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    // 输出点击的view的类名
+    NSLog(@<span class="string">"%@"</span>, NSStringFromClass([touch.view class]));
+
+    // 若为UITableViewCellContentView（即点击了tableViewCell），则不截获Touch事件
+    <span class="keyword">if</span> ([NSStringFromClass([touch.view class]) isEqualToString:@<span class="string">"UITableViewCellContentView"</span>]) {
+        <span class="built_in">return</span> NO;
+    }
+    <span class="built_in">return</span>  YES;
+}
+</code></pre>
+
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
     <article id="mytext-des加密" class="article article-type-mytext" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -729,53 +789,6 @@ sh /Library/Tomcat/bin/startup.sh
 <p><span style="font-size: 14px; color: rgb(0, 128, 0);">工程demo</span></p>
 <p><a href="/downLoadData/iphone_shi_pei.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
 </div></div></div>
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="post-获取所有安装的app" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/10/31/获取所有安装的app/" class="article-date">
-  	<time datetime="2014-10-30T16:02:20.000Z" itemprop="datePublished">10月 31 2014</time>
-</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li></ul>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/10/31/获取所有安装的app/">获取所有安装的app</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <pre><code class="bash"><span class="comment">#include &lt;objc/runtime.h&gt;</span>
-Class LSApplicationWorkspace_class = objc_getClass(<span class="string">"LSApplicationWorkspace"</span>);
-NSObject* workspace = [LSApplicationWorkspace_class performSelector:@selector(defaultWorkspace)];
-NSLog(@<span class="string">"apps: %@"</span>, [workspace performSelector:@selector(allApplications)]);
-</code></pre>
-
       
     </div>
   </div>

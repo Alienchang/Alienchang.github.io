@@ -181,6 +181,57 @@
 </nav>
       
   
+    <article id="post-block各种定义写法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/07/20/block各种定义写法/" class="article-date">
+  	<time datetime="2015-07-20T06:22:02.000Z" itemprop="datePublished">7月 20 2015</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+      
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/20/block各种定义写法/">block各种定义写法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>As a local variable:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">returnType (^blockName)(parameterTypes) = ^returnType(parameters) &#123;...&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>As a property:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, copy) returnType (^blockName)(parameterTypes);</span><br></pre></td></tr></table></figure></p>
+<p>As a method parameter:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)someMethodThatTakesABlock:(returnType (^)(parameterTypes))blockName;</span><br></pre></td></tr></table></figure></p>
+<p>As an argument to a method call:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[someObject someMethodThatTakesABlock:^returnType (parameters) &#123;...&#125;];</span><br></pre></td></tr></table></figure></p>
+<p>As a typedef:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef returnType (^TypeName)(parameterTypes);&#10;TypeName blockName = ^returnType(parameters) &#123;...&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>This site is not intended to be an exhaustive list of all possible uses of blocks.<br>If you find yourself needing syntax not listed here, it is likely that a typedef would make your code more readable.</p>
+<p>Unable to access this site due to the profanity in the URL? <a href="http://goshdarnblocksyntax.com" target="_blank" rel="external">http://goshdarnblocksyntax.com</a> is a more work-friendly mirror.</p>
+
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
     <article id="post-iOS开发规范" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -225,7 +276,7 @@
 
 <span class="number">2</span>、变量命名：
 
-    （<span class="number">1</span>）属性：头字母小写，同样驼峰命名，不可以使用下划线，尽量不要使用缩写。属性列表尽量保持对齐美观。
+    （<span class="number">1</span>）属性：头字母小写，同样驼峰命名，不可以使用下划线，尽量不要使用缩写。属性列表尽量保持对齐美观，推荐使用XAlign。
         例：
         <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDictionary</span>          *rawData;
         <span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span>        *dataArray;
@@ -707,66 +758,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pragma mark - UIGestureRecognizerDelegate&#10;- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch&#10;&#123;&#10;    // &#36755;&#20986;&#28857;&#20987;&#30340;view&#30340;&#31867;&#21517;&#10;NSLog(@&#34;%@&#34;, NSStringFromClass([touch.view class]));&#10;&#10;// &#33509;&#20026;UITableViewCellContentView&#65288;&#21363;&#28857;&#20987;&#20102;tableViewCell&#65289;&#65292;&#21017;&#19981;&#25130;&#33719;Touch&#20107;&#20214;&#10;if ([NSStringFromClass([touch.view class]) isEqualToString:@&#34;UITableViewCellContentView&#34;]) &#123;&#10;    return NO;&#10;&#125;&#10;return  YES;&#10;&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="post-解决UIGesture和tableViewCell点击事件的冲突" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/" class="article-date">
-  	<time datetime="2015-01-15T09:10:37.000Z" itemprop="datePublished">1月 15 2015</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/15/解决UIGesture和tableViewCell点击事件的冲突/">解决UIGesture和tableViewCell点击事件的冲突</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>当你给一个controller的view加了手势之后发现tableViewCell不回接收到响应，因为响应被view拦截</p>
-<pre><code class="bash"><span class="comment">#pragma mark - UIGestureRecognizerDelegate</span>
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    // 输出点击的view的类名
-    NSLog(@<span class="string">"%@"</span>, NSStringFromClass([touch.view class]));
-
-    // 若为UITableViewCellContentView（即点击了tableViewCell），则不截获Touch事件
-    <span class="keyword">if</span> ([NSStringFromClass([touch.view class]) isEqualToString:@<span class="string">"UITableViewCellContentView"</span>]) {
-        <span class="built_in">return</span> NO;
-    }
-    <span class="built_in">return</span>  YES;
-}
-</code></pre>
 
       
     </div>

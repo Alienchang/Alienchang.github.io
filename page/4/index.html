@@ -181,6 +181,55 @@
 </nav>
       
   
+    <article id="post-UITextField自定义" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/08/13/UITextField自定义/" class="article-date">
+  	<time datetime="2014-08-13T01:22:44.000Z" itemprop="datePublished">8月 13 2014</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/08/13/UITextField自定义/">UITextField自定义</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//重置textField编辑时输入框的rect</span><br><span class="line">- (CGRect)editingRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">return</span>  CGRectMake(<span class="number">3</span>, <span class="number">0</span>, bounds.size.width - <span class="number">3</span>, bounds.size.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (CGRect)textRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">return</span> CGRectInset(bounds, <span class="number">3</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (CGRect)borderRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">return</span>  CGRectMake(<span class="number">3</span>, <span class="number">0</span>,bounds.size.width - <span class="number">3</span>, bounds.size.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (CGRect)placeholderRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">return</span>  CGRectMake(<span class="number">3</span>, <span class="number">0</span>,bounds.size.width - <span class="number">3</span>, bounds.size.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
     <article id="post-基于view的某一点进行缩放" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

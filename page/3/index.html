@@ -181,6 +181,80 @@
 </nav>
       
   
+    <article id="post-关于iPhone界面适配详细版本" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/11/03/关于iPhone界面适配详细版本/" class="article-date">
+  	<time datetime="2014-11-03T13:35:01.000Z" itemprop="datePublished">11月 3 2014</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xcode/">xcode</a></li></ul>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/11/03/关于iPhone界面适配详细版本/">关于iPhone界面适配详细版本</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/img/fitScreen/1415006071293466.png" style="width: 400px;"></p>
+<h1 id="3GS手机">3GS手机</h1><p><div align="center"><br>    <img src="/img/fitScreen/3GS.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="iPhone_4/4S">iPhone 4/4S</h1><p><div align="center"><br>    <img src="/img/fitScreen/iphone4、4s.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="iPhone_5/5c/5s">iPhone 5/5c/5s</h1><p><div align="center"><br>    <span style="width:50px;"></span><img src="/img/fitScreen/iPhone5、5c、5s.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="iPhone_6">iPhone 6</h1><p><div align="center"><br>    <img src="/img/fitScreen/iPhone6.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="iPhone_6+">iPhone 6+</h1><p><div align="center"><br>    <img src="/img/fitScreen/iPhone6p.png" style="width: 400px;"></div></p>
+<div>
+
+<h1 id="3GS所需的元素图片">3GS所需的元素图片</h1><p><div align="center"><br>default_Head_image.png<br><img src="/img/fitScreen/3GSCircle.png" style="width: 400px;"></div></p>
+<div>
+
+<p><div align="center"><br>default_btn_image.png<br><img src="/img/fitScreen/3GSRect.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="4/4S所需要的图片">4/4S所需要的图片</h1><p><div align="center"><br>default_Head_image@2x.png<br><img src="/img/fitScreen/4、4s.png" style="width: 400px;"><br><br><br>default_btn_image@2x.png<br><img src="/img/fitScreen/4、4sRect.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="5/5c/5s所需要的图片">5/5c/5s所需要的图片</h1><p><div align="center"><br>default_Head_image_5@2x.png<br><img src="/img/fitScreen/5、5c、5sCircle.png" style="width: 400px;"><br><br><br>default_btn_image_5@2x.png<br><img src="/img/fitScreen/5、5c、5sRect.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="iPhoen_6_所需要的图片">iPhoen 6 所需要的图片</h1><p><div align="center"><br>default_Head_image_6@2x.png<br><img src="/img/fitScreen/iPhone6Circle.png" style="width: 400px;"><br><br><br>default_btn_image_6@2x.png<br><img src="/img/fitScreen/iPhone6Rect.png" style="width: 400px;"></div></p>
+<p><div></div></p>
+<h1 id="iPhone_6_plus所需要的图片">iPhone 6 plus所需要的图片</h1><p><div align="center"><br>default<em>Head_image_6</em>@3x.png<br><img src="/img/fitScreen/6pCircle.png" style="width: 400px;"><br><br><br>default<em>btn_image_6</em>@3x.png<br><img src="/img/fitScreen/6pRect.png" style="width: 400px;"></div></p>
+<div>
+
+<p><span style="font-size: 14px; color: rgb(0, 128, 0);">工程demo</span></p>
+<p><a href="/downLoadData/iphone_shi_pei.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
+</div></div></div>
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
     <article id="post-获取所有安装的app" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -692,55 +766,6 @@ NSString *tableName = @<span class="string">"user_table"</span>;
 <p>BOOL ret = [zip CreateZipFile2:l_zipfile];<br>ret = [zip addFileToZip:image1 newname:@”2.png”];<br>ret = [zip addFileToZip:image2 newname:@”3.png”];<br>if( ![zip CloseZipFile2] )<br>{<br>    l_zipfile = @””;<br>}<br>[zip release];<br>4、解压缩ZIP文件代码如下：</p>
 <p>ZipArchive* zip = [[ZipArchive alloc] init];<br>NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);<br>NSString *dcoumentpath = ([paths count] &gt; 0) ? [paths objectAtIndex:0] : nil;<br>NSString* l_zipfile = [dcoumentpath stringByAppendingString:@”/test.zip”] ;<br>NSString* unzipto = [dcoumentpath stringByAppendingString:@”/test”] ;<br>if( [zip UnzipOpenFile:l_zipfile] ) {<br>    BOOL ret = [zip UnzipFileTo:unzipto overWrite:YES];<br>    if( NO==ret ) { }<br>    [zip UnzipCloseFile];<br>}<br>[zip release];</p>
 
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="post-UITextField自定义" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/08/13/UITextField自定义/" class="article-date">
-  	<time datetime="2014-08-13T01:22:44.000Z" itemprop="datePublished">8月 13 2014</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ios/">ios</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小知识/">小知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">技术</a></li></ul>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/08/13/UITextField自定义/">UITextField自定义</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//重置textField编辑时输入框的rect</span><br><span class="line">- (CGRect)editingRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">return</span>  CGRectMake(<span class="number">3</span>, <span class="number">0</span>, bounds.size.width - <span class="number">3</span>, bounds.size.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (CGRect)textRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">return</span> CGRectInset(bounds, <span class="number">3</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (CGRect)borderRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">return</span>  CGRectMake(<span class="number">3</span>, <span class="number">0</span>,bounds.size.width - <span class="number">3</span>, bounds.size.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (CGRect)placeholderRectForBounds:(CGRect)bounds</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">return</span>  CGRectMake(<span class="number">3</span>, <span class="number">0</span>,bounds.size.width - <span class="number">3</span>, bounds.size.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
   </div>

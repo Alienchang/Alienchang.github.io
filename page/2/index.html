@@ -181,6 +181,73 @@
 </nav>
       
   
+    <article id="post-iOS小技巧" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/02/07/iOS小技巧/" class="article-date">
+  	<time datetime="2015-02-07T11:27:58.000Z" itemprop="datePublished">2月 7 2015</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/技术/">技术</a>
+  </div>
+
+      
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/02/07/iOS小技巧/">iOS小技巧</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><p>在tableViewCell中获取当前cell所在的indexPath？</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (UITableView*)tableView &#123;</span><br><span class="line">    <span class="keyword">if</span> (tableView == nil) &#123;</span><br><span class="line">        tableView = (UITableView*)self.superview;</span><br><span class="line">    <span class="keyword">while</span> (tableView &amp;&amp; ![tableView isKindOfClass:[UITableView class]]) &#123;</span><br><span class="line">        tableView = (UITableView*)tableView.superview;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="built_in">return</span> tableView;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">NSIndexPath *p = [self.tableView indexPathForCell:self];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>想做现在还不能做</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">善用 // TODO: xxxxxx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>想在两个网络请求后再callback?</p>
+<figure class="highlight"><figcaption><span>serviceGroup = dispatch_group_create();</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_enter(serviceGroup);&#10;[Network fetchSuccess:&#123;&#10;    dispatch_group_leave(serviceGroup);&#10;&#125; error:&#123;&#10;    dispatch_group_leave(serviceGroup);&#10;&#125;];&#10;&#10;dispatch_group_enter(serviceGroup);&#10;[Network fetchSuccess:&#123;&#10;    dispatch_group_leave(serviceGroup);&#10;&#125; error:&#123;&#10;    dispatch_group_leave(serviceGroup);&#10;&#125;];&#10;&#10;dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^&#123;&#10;    // Assess any errors&#10;    NSError *overallError = nil;&#10;    successBlock();&#10;    // Now call the final completion block&#10;&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>计算文字所占大小</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary * tdic = [NSDictionary dictionaryWithObjectsAndKeys:[AppSkin fontOfBoldTinySize],NSFontAttributeName,nil];</span><br><span class="line"></span><br><span class="line">CGSize actualsize =[string boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin  attributes:tdic context:nil].size;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实时监听textField的字符变化，当你想用UITextField实现SearchBar的功能时，你会发现系统没有给出与SearchBar相似的delegate，这时我们可以用通知来实现这个功能</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//注册对应的通知：</span><br><span class="line">[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldChanged:) name:UITextFieldTextDidChangeNotification object:textField];</span><br><span class="line"></span><br><span class="line">//实现textFieldChanged函数</span><br><span class="line">- (void)textFieldChanged:(id)sender</span><br><span class="line">&#123;</span><br><span class="line">NSNotification *notification = (NSNotification *)sender;</span><br><span class="line">UITextField *textField = notification.object;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//记得在dealloc中删除掉通知。</span><br><span class="line">- (void)dealloc</span><br><span class="line">&#123;</span><br><span class="line">[[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>iOS8判断是否是第三方输入法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([NSStringFromClass([[textField textInputMode] class]) isEqualToString:@<span class="string">"UIKeyboardExtensionInputMode"</span>]) &#123;</span><br><span class="line">NBLog(@<span class="string">"是他大爷的第三方输入法"</span>);</span><br><span class="line">&#125;</span><br><span class="line">//UIKeyboardExtensionInputMode是控制台下po出来的，私有的</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>给一个controller的view加了手势之后发现tableViewCell不回接收到响应，因为响应被view拦截</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pragma mark - UIGestureRecognizerDelegate&#10;- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch&#10;&#123;&#10;    // &#36755;&#20986;&#28857;&#20987;&#30340;view&#30340;&#31867;&#21517;&#10;NSLog(@&#34;%@&#34;, NSStringFromClass([touch.view class]));&#10;&#10;// &#33509;&#20026;UITableViewCellContentView&#65288;&#21363;&#28857;&#20987;&#20102;tableViewCell&#65289;&#65292;&#21017;&#19981;&#25130;&#33719;Touch&#20107;&#20214;&#10;if ([NSStringFromClass([touch.view class]) isEqualToString:@&#34;UITableViewCellContentView&#34;]) &#123;&#10;    return NO;&#10;&#125;&#10;return  YES;&#10;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+  </div>
+  
+</article>
+
+
+
+
+
+
+  
     <article id="post-解决UIGesture和tableViewCell点击事件的冲突" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -715,80 +782,6 @@ sh /Library/Tomcat/bin/startup.sh
 <h1 id="Skype">Skype</h1><p><a href="https://github.com/AFNetworking/AFNetworking" target="_blank" rel="external">AFNetworking</a>: 适用于iOS和OS X的网络框架。<br><a href="https://github.com/bitstadium/HockeySDK-iOS" target="_blank" rel="external">Hockey SDK</a>: HockeyApp service官方iOS SDK。<br><a href="https://github.com/plausiblelabs/plcrashreporter" target="_blank" rel="external">PLCrashReporter (Github mirror)</a>: 进程内的崩溃报告框架。<br><a href="https://github.com/mattt/TTTAttributedLabel" target="_blank" rel="external">TTTAttributedLabel</a>: 是一个文字视图开源组件，是UILabel的替代元件，可以以简单的方式展现渲染的属性字符串。另外，还支持链接植入，不管是手动还是使用UIDataDetectorTypes自动把电话号码、事件、地址以及其他信息变成链接。<br><a href="https://github.com/rs/SDWebImage" target="_blank" rel="external">SDWebImage</a>: 提供一个UIImageVIew类以支持远程加载网络图片。具有缓存管理、异步图片下载等功能，支持GIF动画，使用GCD和ARC。<br><a href="https://github.com/CocoaLumberjack/CocoaLumberjack" target="_blank" rel="external">Cocoa Lumberjack</a>: 适用于Mac和iOS的日志框架，集简单、快速、强大以及灵活于一身。<br><a href="https://github.com/mwaterfall/MWPhotoBrowser" target="_blank" rel="external">MWPhotoBrowser</a>: 一个简单的带有栅格视图的iOS照片浏览器，可添加标题和选择多个图片。照片浏览器效果类似iOS原生的照片应用,可显示来自手机的图片或者是网络图片，也可自动从网络下载图片并进行缓存，还可图片进行缩放等。<br><a href="https://github.com/zwaldowski/BlocksKit" target="_blank" rel="external">BlocksKit</a>: Objective-C blocks工具包。</p>
 <h1 id="Spotify">Spotify</h1><p><a href="https://github.com/ccgus/fmdb" target="_blank" rel="external">FMDB</a>: SQLite API封装库。<br><a href="https://github.com/mikeash/MAObjCRuntime" target="_blank" rel="external">MAObjCRuntime</a>:将运行时API封装成ObjC。<br><a href="https://github.com/timburks/nu" target="_blank" rel="external">Nu</a>: 编程语言。<br><a href="https://github.com/plausiblelabs/plcrashreporter" target="_blank" rel="external">PLCrashReporter (Github mirror)</a>:进程内崩溃报告框架。<br><a href="https://github.com/stig/json-framework/" target="_blank" rel="external">SBJSON</a>:Objective-C 实现的一个严格的JSON 解析器和生成器。</p>
 
-      
-    </div>
-  </div>
-  
-</article>
-
-
-
-
-
-
-  
-    <article id="post-关于iPhone界面适配详细版本" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/11/03/关于iPhone界面适配详细版本/" class="article-date">
-  	<time datetime="2014-11-03T13:35:01.000Z" itemprop="datePublished">11月 3 2014</time>
-</a>
-      
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/技术/">技术</a>
-  </div>
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xcode/">xcode</a></li></ul>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/03/关于iPhone界面适配详细版本/">关于iPhone界面适配详细版本</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/img/fitScreen/1415006071293466.png" style="width: 400px;"></p>
-<h1 id="3GS手机">3GS手机</h1><p><div align="center"><br>    <img src="/img/fitScreen/3GS.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="iPhone_4/4S">iPhone 4/4S</h1><p><div align="center"><br>    <img src="/img/fitScreen/iphone4、4s.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="iPhone_5/5c/5s">iPhone 5/5c/5s</h1><p><div align="center"><br>    <span style="width:50px;"></span><img src="/img/fitScreen/iPhone5、5c、5s.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="iPhone_6">iPhone 6</h1><p><div align="center"><br>    <img src="/img/fitScreen/iPhone6.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="iPhone_6+">iPhone 6+</h1><p><div align="center"><br>    <img src="/img/fitScreen/iPhone6p.png" style="width: 400px;"></div></p>
-<div>
-
-<h1 id="3GS所需的元素图片">3GS所需的元素图片</h1><p><div align="center"><br>default_Head_image.png<br><img src="/img/fitScreen/3GSCircle.png" style="width: 400px;"></div></p>
-<div>
-
-<p><div align="center"><br>default_btn_image.png<br><img src="/img/fitScreen/3GSRect.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="4/4S所需要的图片">4/4S所需要的图片</h1><p><div align="center"><br>default_Head_image@2x.png<br><img src="/img/fitScreen/4、4s.png" style="width: 400px;"><br><br><br>default_btn_image@2x.png<br><img src="/img/fitScreen/4、4sRect.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="5/5c/5s所需要的图片">5/5c/5s所需要的图片</h1><p><div align="center"><br>default_Head_image_5@2x.png<br><img src="/img/fitScreen/5、5c、5sCircle.png" style="width: 400px;"><br><br><br>default_btn_image_5@2x.png<br><img src="/img/fitScreen/5、5c、5sRect.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="iPhoen_6_所需要的图片">iPhoen 6 所需要的图片</h1><p><div align="center"><br>default_Head_image_6@2x.png<br><img src="/img/fitScreen/iPhone6Circle.png" style="width: 400px;"><br><br><br>default_btn_image_6@2x.png<br><img src="/img/fitScreen/iPhone6Rect.png" style="width: 400px;"></div></p>
-<p><div></div></p>
-<h1 id="iPhone_6_plus所需要的图片">iPhone 6 plus所需要的图片</h1><p><div align="center"><br>default<em>Head_image_6</em>@3x.png<br><img src="/img/fitScreen/6pCircle.png" style="width: 400px;"><br><br><br>default<em>btn_image_6</em>@3x.png<br><img src="/img/fitScreen/6pRect.png" style="width: 400px;"></div></p>
-<div>
-
-<p><span style="font-size: 14px; color: rgb(0, 128, 0);">工程demo</span></p>
-<p><a href="/downLoadData/iphone_shi_pei.zip" style="font-size: 14px; text-decoration: underline;"><strong><span style="font-size: 14px;">下载</span></strong></a></p>
-</div></div></div>
       
     </div>
   </div>

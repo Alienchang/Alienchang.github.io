@@ -1,0 +1,28 @@
+---
+title: "iOS基础知识"
+date: 2022-02-13T15:0:09+08:00
+draft: false
+---
+
+#ios中属性修饰符
+###
+copy
+###
+retain
+###
+strong
+###
+weak：
+weak 只可以修饰对象。如果修饰基本数据类型，编译器会报错-“Property with ‘weak’ attribute must be of object type”。
+###
+assign：
+可修饰对象，和基本数据类型。当需要修饰对象类型时，MRC时代使用unsafe_unretained。
+__unsafe_unretained和__weak一样，表示的是对象的一种弱引用关系，唯一的区别是：__weak修饰的对象被释放后，指向对象的指针会置空，也就是指向nil,不会产生野指针；而__unsafe_unretained修饰的对象被释放后，指针不会置空，而是变成一个野指针，那么此时如果访问这个对象的话，程序就会Crash，抛出BAD_ACCESS的异常
+
+###
+unsafe_unretained：
+unsafe_unretained也可能产生野指针，所以它名字是"unsafe_”
+
+
+readwrite/readonly (读写策略、访问权限)
+nonatomic/atomic (安全策略)

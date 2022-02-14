@@ -6,43 +6,7 @@
     <description>Recent content in category on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 13 Feb 2022 23:43:47 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/category/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>iOS多线程GCD</title>
-      <link>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</link>
-      <pubDate>Sun, 13 Feb 2022 23:43:47 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>IOS多线程</title>
-      <link>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
-      <pubDate>Sun, 13 Feb 2022 23:42:19 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>iOS属性修饰符</title>
-      <link>https://alienchang.github.io/post/ios%E5%B1%9E%E6%80%A7%E4%BF%AE%E9%A5%B0%E7%AC%A6/</link>
-      <pubDate>Sun, 13 Feb 2022 23:38:27 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/post/ios%E5%B1%9E%E6%80%A7%E4%BF%AE%E9%A5%B0%E7%AC%A6/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>iOS消息转发</title>
-      <link>https://alienchang.github.io/post/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</link>
-      <pubDate>Sun, 13 Feb 2022 23:25:44 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/post/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Sun, 13 Feb 2022 15:13:27 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/category/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>IOS基础知识1</title>
       <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%861/</link>

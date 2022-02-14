@@ -6,40 +6,76 @@
     <description>Recent content in Posts on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 13 Feb 2022 23:43:47 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Feb 2022 01:31:58 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IOS内存分布</title>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</link>
+      <pubDate>Tue, 15 Feb 2022 01:31:58 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>面试题，算法</title>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/%E9%9D%A2%E8%AF%95%E9%A2%98%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Tue, 15 Feb 2022 01:25:30 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/%E9%9D%A2%E8%AF%95%E9%A2%98%E7%AE%97%E6%B3%95/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>IOS中事件的响应链和传递链</title>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E4%B8%AD%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%93%8D%E5%BA%94%E9%93%BE%E5%92%8C%E4%BC%A0%E9%80%92%E9%93%BE/</link>
+      <pubDate>Tue, 15 Feb 2022 00:48:12 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E4%B8%AD%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%93%8D%E5%BA%94%E9%93%BE%E5%92%8C%E4%BC%A0%E9%80%92%E9%93%BE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iOS多读单写</title>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/</link>
+      <pubDate>Mon, 14 Feb 2022 10:17:42 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>iOS多线程GCD</title>
-      <link>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</link>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</link>
       <pubDate>Sun, 13 Feb 2022 23:43:47 +0800</pubDate>
       
-      <guid>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</guid>
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</guid>
       <description></description>
     </item>
     
     <item>
       <title>IOS多线程</title>
-      <link>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/</link>
       <pubDate>Sun, 13 Feb 2022 23:42:19 +0800</pubDate>
       
-      <guid>https://alienchang.github.io/post/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/</guid>
       <description></description>
     </item>
     
     <item>
       <title>iOS属性修饰符</title>
-      <link>https://alienchang.github.io/post/ios%E5%B1%9E%E6%80%A7%E4%BF%AE%E9%A5%B0%E7%AC%A6/</link>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%B1%9E%E6%80%A7%E4%BF%AE%E9%A5%B0%E7%AC%A6/</link>
       <pubDate>Sun, 13 Feb 2022 23:38:27 +0800</pubDate>
       
-      <guid>https://alienchang.github.io/post/ios%E5%B1%9E%E6%80%A7%E4%BF%AE%E9%A5%B0%E7%AC%A6/</guid>
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%B1%9E%E6%80%A7%E4%BF%AE%E9%A5%B0%E7%AC%A6/</guid>
       <description></description>
     </item>
     
     <item>
       <title>iOS消息转发</title>
-      <link>https://alienchang.github.io/post/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</link>
+      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</link>
       <pubDate>Sun, 13 Feb 2022 23:25:44 +0800</pubDate>
       
-      <guid>https://alienchang.github.io/post/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</guid>
+      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</guid>
       <description></description>
     </item>
     
@@ -64,15 +100,6 @@ hugo new site AlienchangSite #打开主题网站https://suixinblog.cn/，选一�
 cd AlienchangSite/themes git clone https://github.com/vaga/hugo-theme-m10c.git #新建文章，mysite/content
 hugo new post/first.md #本地预览
 hugo server -t beautifulhugo -D http://localhost:1313/ hugo -D 构建静态页面 public 文件夹下</description>
-    </item>
-    
-    <item>
-      <title>Test</title>
-      <link>https://alienchang.github.io/post/test/</link>
-      <pubDate>Fri, 11 Feb 2022 13:51:37 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/post/test/</guid>
-      <description></description>
     </item>
     
   </channel>

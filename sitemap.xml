@@ -3,24 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://alienchang.github.io/</loc>
-    <lastmod>2022-02-15T01:31:58+08:00</lastmod>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/categories/</loc>
-    <lastmod>2022-02-15T01:31:58+08:00</lastmod>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/post/</loc>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/tags/</loc>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/post/%E7%8E%A9/%E5%A5%BD%E7%8E%A9%E7%BD%91%E7%AB%99/</loc>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/tags/%E6%89%93%E5%8F%91%E6%97%B6%E9%97%B4/</loc>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/categories/%E7%8E%A9/</loc>
+    <lastmod>2022-02-15T13:20:12+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/tags/ios/</loc>
+    <lastmod>2022-02-15T01:31:58+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/categories/ios/</loc>
     <lastmod>2022-02-15T01:31:58+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83/</loc>
     <lastmod>2022-02-15T01:31:58+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/categories/ios%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2022-02-15T01:31:58+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/post/</loc>
-    <lastmod>2022-02-15T01:31:58+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/tags/</loc>
     <lastmod>2022-02-15T01:31:58+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/%E9%9D%A2%E8%AF%95%E9%A2%98%E7%AE%97%E6%B3%95/</loc>
@@ -30,12 +42,6 @@
     <lastmod>2022-02-15T00:48:12+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/</loc>
-    <lastmod>2022-02-14T10:17:42+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/tags/tag1/</loc>
-    <lastmod>2022-02-14T10:17:42+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/tags/tag2/</loc>
     <lastmod>2022-02-14T10:17:42+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/</loc>
@@ -50,13 +56,7 @@
     <loc>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91/</loc>
     <lastmod>2022-02-13T23:25:44+08:00</lastmod>
   </url><url>
-    <loc>https://alienchang.github.io/categories/category/</loc>
-    <lastmod>2022-02-13T15:13:27+08:00</lastmod>
-  </url><url>
     <loc>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%861/</loc>
-    <lastmod>2022-02-13T15:13:27+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/categories/subcategory/</loc>
     <lastmod>2022-02-13T15:13:27+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</loc>

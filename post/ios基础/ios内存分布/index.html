@@ -272,8 +272,125 @@ text: 程序代码,加载到内存后都放在text段中。</p>
 <li>散列表
 是一种很复杂的结构,其中包含了引用计数表和弱引用表。</li>
 </ol>
-<p>NONPOINTER_ISA (非指针型的ISA)这种内存管理方案）</p>
-<p><a href="https://www.jianshu.com/p/40c755d81f89">https://www.jianshu.com/p/40c755d81f89</a></p>
+<p>NONPOINTER_ISA (非指针型的ISA)这种内存管理方案）
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/1.png?raw=true" alt="avatar"><br>
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/2.png?raw=true" alt="avatar"></p>
+<p>在arm64架构下,ISA指针一共有64个bit位，我们逐一分析这64个bit位分别都存储了什么内容：
+首先看0-15位：第一位是(indexed)标志位,如果这个位置是0,代表我们使用的这个ISA指针只是一个纯的ISA指针,里面内容代表当前对象的类对象的地址。若这个标志是1,代表ISA指针里面不仅存储类对象的地址,还有一些内存管理方面的数据。</p>
+<p>第二位(has_assoc)表示当前对象是否有关联对象,若是0则没有,若是1代表有。</p>
+<p>第三位(has_cxx_dtor)表示当前对象是否有使用到C++相关的代码
+剩下的33位(shiftcls)0,1的一个bit位表示当前对象的类对象的指针地址。</p>
+<p>再后6位(magic),不影响内存管理的解答。</p>
+<p>再后一位（weakly_referenced）标识了这个对象是否有相应的一个弱引用指针。</p>
+<p>再后一位(deallocating)标识当前对象是否正在进行dealloc操作。</p>
+<p>再后一位(has_siderable_rc)标识当前ISA指针中存储的引用计数是否达到了上线,若达到了,需要外挂一个sidetable这样的数据结构来存储相关的引用计数内容,也就是我们接下来要了解的散列表。</p>
+<p>剩余的(extra_rc)代表的就是额外的引用计数,当引用计数值很小的时候,会存在ISA指针中,当大的时候,会有单独的引用计数表去存储。</p>
+<p>通过NONPOINTER_ISA 64个bit位的分析，可以看出,关于内存管理不仅仅是散列表,其实还有ISA部分的extra_rc来存储相关的引用计数值。</p>
+<h2 id="散列表方式关于散列表这种内存管理方案的相关面试问题">散列表方式（关于散列表这种内存管理方案的相关面试问题）</h2>
+<p>散列表的方案在源码中是通过Side Tables()结构来实现，Side Tables()结构是什么：
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/3.png?raw=true" alt="avatar"><br>
+Side Table()结构下挂了很多Side Table这样的数据结构,这些结构在不同的架构下有不同的个数。
+例如在非嵌入式系统下面,一共有64个Side Table表。
+Side Table()实际上是一个哈希表
+可以通过一个对象指针来具体找到对应的引用计数标或弱引用表在哪一张Side Table中。<br>
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/4.png?raw=true" alt="avatar"></p>
+<p>Side Table结构下包含了三个元素</p>
+<ol>
+<li>自旋锁</li>
+<li>引用计数表</li>
+<li>弱引用表</li>
+</ol>
+<p>面试当中进程会针对引用计数表和弱引用表提出一些相关技术问题。
+也会有一些涉及到自旋锁的相关面试问题，不过涉及到一些多线程的和资源竞争方面相关的问题。</p>
+<p><strong>为什么不是一个Side Table来实现,而是由多个Side Table共同组成一个Side Tables()这样一个数据结构?</strong>
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/5.png?raw=true" alt="avatar"><br>
+假如只有一张Side Table,相当于我们在内存当中分配的所有对象的引用计数或者说弱引用都放到了一张大表中,
+如果要操作某个对象的引用计数值进行修改（进行+1或者-1的操作）,
+由于所有的对象可能是在不同的线程中分配创建的（包括调用他们的return或者release等方法，也可能是在不同线程里面进行操作的）,
+那么对这张表操作时就需要进行加锁处理,来保证数据访问的安全,这样就存在了效率问题。
+假如用户的内存空间一共有4GB,我们可能分配出成千上百万个内存对象,
+如果每一个对象在进行引用计数改变时,都操作这张表,很显然就存在了效率问题。
+当对象A操作时,因为加了锁,下一个对象就要等当前对象操作完之后,将锁释放后,B才能操作。
+系统为了解决这样的效率问题,引用了分离锁的技术方案。<br>
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/6.png?raw=true" alt="avatar"><br>
+<strong>分离锁</strong>:可以把内存对象所对应的引用计数表分拆成多个部分,假设分拆成8个,需要对8个表分别加锁,
+假如对象A在表1中,对象B在表2中,当A和B同时进行引用计数操作时,可以并发操作,
+但如果只有一张表就只能按顺序操作,分离锁可以提高访问效率.</p>
+<p>如何实现快速分流（如何通过一个对象指针,如何快速定位到它属于哪张Side Table表）？
+快速分流是指: Side Table本质是张Hash表,这张Hash表中,可能有64张具体的Side Table,
+存储不同对象的引用计数表和弱引用表
+<strong>Hash表的概念是：（哈希查找 、哈希算法）</strong>
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/7.png?raw=true" alt="avatar"><br>
+对象指针可以作为一个key
+经过Hash函数的一个运算,会计算出一个值Value,来决定出这个对象所对应的Side Table是哪张,或者说在数组的位置索引是哪个。</p>
+<p>下面看下<strong>Hash查找</strong>的过程</p>
+<p><img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/8.png?raw=true" alt="avatar"></p>
+<p>假如给定的值是对象内存地址,目标值是Side Table结构(数组)下标索引</p>
+<ul>
+<li>ptr是对象内存指针地址。</li>
+<li>通过哈希函数f,把指针ptr作为函数f的参数。</li>
+<li>经过函数f的运算,可以得出数组的下标索引值index。
+哈希函数f对于Side Table具体的情况来讲,实际表达式如图所示f(ptr) = (unitptr_t)ptr % array.count,</li>
+<li>通过对象的内存地址,来和Side Table这个数组的个数进行取余运算。</li>
+<li>计算出对象指针所对应的引用技术表或者弱引用表是在哪一张Side Table中。</li>
+</ul>
+<p><strong>为什么要通过Hash查找？</strong></p>
+<ul>
+<li>可以提高查找效率。存储时通过Hash进行存储,假如数组是8,假如内存地址是1,取余就是1,我们就把对象存储在第一个位置,当访问对象时,也不用对数组遍历并比较指针值,只需要也通过这个函数进行运算,找到第一个索引位置,直接取出内容。</li>
+<li>这样就不涉及遍历操作了,查找效率比较高。</li>
+<li>内存地址的分布是均匀分布,我们可以称这个hash函数为均匀散列函数。</li>
+</ul>
+<h2 id="散列表数据结构有关散列表实现的内存管理方案涉及到的一些数据结构">散列表数据结构(有关散列表实现的内存管理方案涉及到的一些数据结构)</h2>
+<ol>
+<li>
+<p>自旋锁Spinlock_t（你是否使用过自旋锁，自旋锁和普通锁有什么区别，自旋锁有哪些使用场景呢？）</p>
+<ul>
+<li>是一种&quot;忙等&quot;的锁,如果当前锁已被其他线程获取,当前线程会不断探测这个锁有没有被释放,如果被释放了,线程就会第一时间去获取这个锁。</li>
+<li>比如说其他的锁,比如信号量:当它获取不到这个锁时,会把自己的线程进行阻塞休眠,然后等到其他线程释放这个锁的时候,再唤醒当前线程。</li>
+<li>自旋锁适用于轻量访问。（比如说上面Side Table表，如果说我们对某一个对象来进行引用计数操作的话，来访问这个表，实际上做+1-1操作是非常快的操作，那么我们可以把它定义为轻量访问。我们在这种轻量访问的场景下，可以使用自旋锁。）</li>
+</ul>
+</li>
+<li>
+<p>引用计数表RefcountMap
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/9.png?raw=true" alt="avatar"></p>
+<ol>
+<li>
+<p>引用计数表是哈希表,可以理解为是一个字典,
+可以通过指针,找到对应对象的引用计数,这个查找过程是一个哈希查找。</p>
+</li>
+<li>
+<p>这个哈希算法实际上是对传入对象的指针做一个伪装的操作,然后去获取对应的引用计数（size_t）。</p>
+</li>
+<li>
+<p>之所以使用哈希查找,是为了提高查找效率。</p>
+</li>
+<li>
+<p>size_t表达的就是对象的引用计数值,是一个无符号long型的变量。</p>
+<ul>
+<li>查找效率的提高,是因为我们存储一个对象的引用计数时,是通过同一个函数来计算存储位置的,而获取对象的引用计数值的时候,也通过同一个函数来计算应该获取的索引位置因为插入和获取都是通过同一个函数来计算位置,就会避免循环遍历的操作。</li>
+<li>所以才说,哈希查找可以提高查找效率。</li>
+</ul>
+<p>size_t每一个bit为代表的含义：</p>
+<p><img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/10.png?raw=true" alt="avatar"><br>
+假如引用计数存储是用64位来表示的</p>
+<ul>
+<li>第1个二进制位(weakly_referenced)表示对象是否有弱引用。</li>
+<li>第2位(deallocating)表示当前对象是否正在delloc。</li>
+<li>其他(RC)存储这个对象的实际引用计数值。</li>
+<li>当我们计算对象的引用计数时,需要对这个值进行向右偏移两位,因为要去掉后面两位,才可以取到真实的引用计数值。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>弱引用表weak_table_t
+<img src="https://github.com/Alienchang/BlogImages/blob/main/iOS/jichu/neicunfenbu/11.png?raw=true" alt="avatar"></p>
+<ul>
+<li>在Runtime源码中可以看到,弱引用表示根据weak_table_t来定义的,weak_table_t也是一张哈希表,给与一个对象的指针作为key,通过一个哈希函数,就可以计算出对应的弱引用的对象的存储位置。</li>
+<li>weak_entry_t实际上也是一个结构体数组,这个数组中存储的每一个对象就是实际的弱引用指针,也就是我们在代码当中定义的类似于__weak id obj,那么这个obj内存地址或者说这个指针就存储在weak_entry_t这个结构体数组中。</li>
+</ul>
+</li>
+</ol>
               
 
 

@@ -6,23 +6,53 @@
     <description>Recent content in tag2 on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Feb 2022 10:17:42 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 24 Dec 2018 15:19:37 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>iOS多读单写</title>
-      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/</link>
-      <pubDate>Mon, 14 Feb 2022 10:17:42 +0800</pubDate>
+      <title>Sirikit Shortcuts</title>
+      <link>https://alienchang.github.io/post/sirikit-shortcuts/</link>
+      <pubDate>Mon, 24 Dec 2018 15:19:37 +0800</pubDate>
       
-      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/</guid>
+      <guid>https://alienchang.github.io/post/sirikit-shortcuts/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>IOS基础知识1</title>
-      <link>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%861/</link>
-      <pubDate>Sun, 13 Feb 2022 15:13:27 +0800</pubDate>
+      <title>练习demo</title>
+      <link>https://alienchang.github.io/post/%E7%BB%83%E4%B9%A0demo/</link>
+      <pubDate>Sat, 21 Jan 2017 16:49:28 +0800</pubDate>
       
-      <guid>https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%861/</guid>
+      <guid>https://alienchang.github.io/post/%E7%BB%83%E4%B9%A0demo/</guid>
+      <description>&lt;ol&gt;
+&lt;li&gt;instagram download image tweak（用于下载instagram的图片）
+&lt;a href=&#34;https://github.com/Alienchang/instagramDownloadImageTweak/tree/master&#34;&gt;https://github.com/Alienchang/instagramDownloadImageTweak/tree/master&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Mac系统下，Flask、uwsgi、Nginx部署应用</title>
+      <link>https://alienchang.github.io/post/mac%E7%B3%BB%E7%BB%9F%E4%B8%8Bflaskuwsginginx%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alienchang.github.io/post/mac%E7%B3%BB%E7%BB%9F%E4%B8%8Bflaskuwsginginx%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>ValueForKeyPath的隐藏用法</title>
+      <link>https://alienchang.github.io/post/valueforkeypath%E7%9A%84%E9%9A%90%E8%97%8F%E7%94%A8%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alienchang.github.io/post/valueforkeypath%E7%9A%84%E9%9A%90%E8%97%8F%E7%94%A8%E6%B3%95/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>我在这里等你（GCD）</title>
+      <link>https://alienchang.github.io/post/%E6%88%91%E5%9C%A8%E8%BF%99%E9%87%8C%E7%AD%89%E4%BD%A0gcd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E6%88%91%E5%9C%A8%E8%BF%99%E9%87%8C%E7%AD%89%E4%BD%A0gcd/</guid>
+      <description>BOOL ifYouBack = false; - (void)waitForYou{ dispatch_queue_t ourLifeQueue = dispatch_get_main_queue(); // dispatch_queue_t waitForYouQueue = dispatch_queue_create(&amp;quot;I.AM.ALWAYS.HERE&amp;quot;, DISPATCH_QUEUE_CONCURRENT); dispatch_queue_t waitForYouQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0); dispatch_async(waitForYouQueue, ^{ while (![self ifYouback]) { dispatch_sync(ourLifeQueue, ^{ NSLog(@&amp;quot;let&#39;s begin a happy life, 115-110-111-119&amp;quot;); }); } }); while (![self ifYouback]) { sleep(1); dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{ while (![self ifYouback]) { NSLog(@&amp;quot;do some thing for life&amp;quot;); } }); } } - (BOOL)ifYouback{ return ifYouBack; } </description>
     </item>
     
   </channel>

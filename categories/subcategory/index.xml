@@ -6,7 +6,25 @@
     <description>Recent content in subcategory on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 24 Dec 2018 15:19:37 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/subcategory/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Oct 2022 15:18:48 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/subcategory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图像色彩格式</title>
+      <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/</link>
+      <pubDate>Thu, 13 Oct 2022 15:18:48 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>图像磨皮原理</title>
+      <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Thu, 13 Oct 2022 15:02:31 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Sirikit Shortcuts</title>
       <link>https://alienchang.github.io/post/sirikit-shortcuts/</link>
@@ -23,8 +41,18 @@
       
       <guid>https://alienchang.github.io/post/%E7%BB%83%E4%B9%A0demo/</guid>
       <description>&lt;ol&gt;
-&lt;li&gt;instagram download image tweak（用于下载instagram的图片）
-&lt;a href=&#34;https://github.com/Alienchang/instagramDownloadImageTweak/tree/master&#34;&gt;https://github.com/Alienchang/instagramDownloadImageTweak/tree/master&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;instagram download image tweak（用于下载instagram的图片）
+&lt;a href=&#34;https://github.com/Alienchang/instagramDownloadImageTweak/tree/master&#34;&gt;https://github.com/Alienchang/instagramDownloadImageTweak/tree/master&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;GoogleTranslate
+&lt;a href=&#34;https://github.com/Alienchang/GoogleTranslate&#34;&gt;https://github.com/Alienchang/GoogleTranslate&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;EasyAddressBook（通讯录获取）
+&lt;a href=&#34;https://github.com/Alienchang/EasyAddressBook&#34;&gt;https://github.com/Alienchang/EasyAddressBook&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     
@@ -52,7 +80,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://alienchang.github.io/post/%E6%88%91%E5%9C%A8%E8%BF%99%E9%87%8C%E7%AD%89%E4%BD%A0gcd/</guid>
-      <description>BOOL ifYouBack = false; - (void)waitForYou{ dispatch_queue_t ourLifeQueue = dispatch_get_main_queue(); // dispatch_queue_t waitForYouQueue = dispatch_queue_create(&amp;quot;I.AM.ALWAYS.HERE&amp;quot;, DISPATCH_QUEUE_CONCURRENT); dispatch_queue_t waitForYouQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0); dispatch_async(waitForYouQueue, ^{ while (![self ifYouback]) { dispatch_sync(ourLifeQueue, ^{ NSLog(@&amp;quot;let&#39;s begin a happy life, 115-110-111-119&amp;quot;); }); } }); while (![self ifYouback]) { sleep(1); dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{ while (![self ifYouback]) { NSLog(@&amp;quot;do some thing for life&amp;quot;); } }); } } - (BOOL)ifYouback{ return ifYouBack; } </description>
+      <description>BOOL ifYouBack = false; - (void)waitForYou{ dispatch_queue_t ourLifeQueue = dispatch_get_main_queue(); // dispatch_queue_t waitForYouQueue = dispatch_queue_create(&amp;#34;I.AM.ALWAYS.HERE&amp;#34;, DISPATCH_QUEUE_CONCURRENT); dispatch_queue_t waitForYouQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0); dispatch_async(waitForYouQueue, ^{ while (![self ifYouback]) { dispatch_sync(ourLifeQueue, ^{ NSLog(@&amp;#34;let&amp;#39;s begin a happy life, 115-110-111-119&amp;#34;); }); } }); while (![self ifYouback]) { sleep(1); dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{ while (![self ifYouback]) { NSLog(@&amp;#34;do some thing for life&amp;#34;); } }); } } - (BOOL)ifYouback{ return ifYouBack; } </description>
     </item>
     
   </channel>

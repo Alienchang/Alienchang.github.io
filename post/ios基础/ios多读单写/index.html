@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="刘畅">
 <meta name="keywords" content="tech">
 <meta name="description" content="">
@@ -119,8 +119,7 @@
     
       <div class="sidebar-profile">
         <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
-          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4"|▸    archetypes/
-       alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刘畅</h4>
         
@@ -268,7 +267,7 @@
         // 创建数据容器
         userCenterDic = [NSMutableDictionary dictionary];
         // 通过宏定义 DISPATCH_QUEUE_CONCURRENT 创建一个并发队列
-        concurrent_queue = dispatch_queue_create(&quot;read_write_queue&quot;, DISPATCH_QUEUE_CONCURRENT);
+        concurrent_queue = dispatch_queue_create(&#34;read_write_queue&#34;, DISPATCH_QUEUE_CONCURRENT);
     }
     return self;
 }
@@ -305,7 +304,7 @@
     self = [super init];
     if (self) {
         // 通过宏定义 DISPATCH_QUEUE_CONCURRENT 创建一个并发队列
-        concurrent_queue = dispatch_queue_create(&quot;read_write_queue&quot;, DISPATCH_QUEUE_CONCURRENT);
+        concurrent_queue = dispatch_queue_create(&#34;read_write_queue&#34;, DISPATCH_QUEUE_CONCURRENT);
         // 创建数据容器
         userCenterDic = [NSMutableDictionary dictionary];
     }
@@ -327,7 +326,6 @@
         [userCenterDic setObject:obj forKey:key];
     });
 }
-
 </code></pre>
               
 

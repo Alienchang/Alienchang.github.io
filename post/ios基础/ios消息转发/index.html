@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="刘畅">
 <meta name="keywords" content="tech">
 <meta name="description" content="">
@@ -119,8 +119,7 @@
     
       <div class="sidebar-profile">
         <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
-          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4"|▸    archetypes/
-       alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刘畅</h4>
         
@@ -256,7 +255,7 @@
 </code></pre><p>即默认不会进行动态方法解析，如果在自定义的类中重写了该函数并且添加了动态解析方法， 那消息查找的最后阶段就会调用到动态解析方法。以实例方法为例如下：</p>
 <pre tabindex="0"><code>+ (BOOL)resolveInstanceMethod:(SEL)sel {
     if (sel == @selector(MissMethod)) {
-        class_addMethod([self class], sel, (IMP)dynamicIMP, &quot;v@:&quot;);
+        class_addMethod([self class], sel, (IMP)dynamicIMP, &#34;v@:&#34;);
         return YES;
     }
     return [super resolveInstanceMethod:sel];
@@ -278,8 +277,8 @@
 <p>当消息转发失败的时候，会执行methodSignatureForSelector获取方法签名，获取成功后会执行forwardInvocation进行消息分发，以对象方法为例默认实现如下：</p>
 <pre tabindex="0"><code>// Replaced by CF (returns an NSMethodSignature)
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
-    _objc_fatal(&quot;-[NSObject methodSignatureForSelector:] &quot;
-                &quot;not available without CoreFoundation&quot;);
+    _objc_fatal(&#34;-[NSObject methodSignatureForSelector:] &#34;
+                &#34;not available without CoreFoundation&#34;);
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
@@ -289,7 +288,7 @@
 <pre tabindex="0"><code>- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     NSMethodSignature *methodSignature = [super methodSignatureForSelector:aSelector];
     if (!methodSignature) {
-        methodSignature = [NSMethodSignature signatureWithObjCTypes:&quot;v@:*&quot;];
+        methodSignature = [NSMethodSignature signatureWithObjCTypes:&#34;v@:*&#34;];
     }
     return methodSignature;
 }

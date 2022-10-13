@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Apr 2022 14:20:49 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Oct 2022 15:18:48 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>category</title>
+      <link>https://alienchang.github.io/categories/category/</link>
+      <pubDate>Thu, 13 Oct 2022 15:18:48 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/categories/category/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>subcategory</title>
+      <link>https://alienchang.github.io/categories/subcategory/</link>
+      <pubDate>Thu, 13 Oct 2022 15:18:48 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/categories/subcategory/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>iOS</title>
       <link>https://alienchang.github.io/categories/ios/</link>
@@ -49,24 +67,6 @@
       <pubDate>Tue, 15 Feb 2022 13:20:12 +0800</pubDate>
       
       <guid>https://alienchang.github.io/categories/%E7%8E%A9/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>category</title>
-      <link>https://alienchang.github.io/categories/category/</link>
-      <pubDate>Mon, 24 Dec 2018 15:19:37 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/categories/category/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>subcategory</title>
-      <link>https://alienchang.github.io/categories/subcategory/</link>
-      <pubDate>Mon, 24 Dec 2018 15:19:37 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/categories/subcategory/</guid>
       <description></description>
     </item>
     

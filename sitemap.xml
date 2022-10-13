@@ -3,13 +3,34 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://alienchang.github.io/</loc>
-    <lastmod>2022-04-08T14:20:49+08:00</lastmod>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/categories/</loc>
-    <lastmod>2022-04-08T14:20:49+08:00</lastmod>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/categories/category/</loc>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/tags/ios/</loc>
-    <lastmod>2022-04-08T14:20:49+08:00</lastmod>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/post/</loc>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/categories/subcategory/</loc>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/tags/</loc>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/</loc>
+    <lastmod>2022-10-13T15:18:48+08:00</lastmod>
+  </url><url>
+    <loc>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2022-10-13T15:02:31+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/categories/ios/</loc>
     <lastmod>2022-04-08T14:20:49+08:00</lastmod>
@@ -18,12 +39,6 @@
     <lastmod>2022-04-08T14:20:49+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/nserror%E4%BC%A0%E5%8F%82/</loc>
-    <lastmod>2022-04-08T14:20:49+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/post/</loc>
-    <lastmod>2022-04-08T14:20:49+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/tags/</loc>
     <lastmod>2022-04-08T14:20:49+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/post/%E8%A7%86%E9%A2%91%E6%B5%8B%E8%AF%95%E8%B5%84%E6%BA%90/</loc>
@@ -80,13 +95,7 @@
     <loc>https://alienchang.github.io/post/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</loc>
     <lastmod>2022-02-11T14:00:09+08:00</lastmod>
   </url><url>
-    <loc>https://alienchang.github.io/categories/category/</loc>
-    <lastmod>2018-12-24T15:19:37+08:00</lastmod>
-  </url><url>
     <loc>https://alienchang.github.io/post/sirikit-shortcuts/</loc>
-    <lastmod>2018-12-24T15:19:37+08:00</lastmod>
-  </url><url>
-    <loc>https://alienchang.github.io/categories/subcategory/</loc>
     <lastmod>2018-12-24T15:19:37+08:00</lastmod>
   </url><url>
     <loc>https://alienchang.github.io/tags/tag1/</loc>

@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="刘畅">
 <meta name="keywords" content="tech">
 <meta name="description" content="">
@@ -119,8 +119,7 @@
     
       <div class="sidebar-profile">
         <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
-          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4"|▸    archetypes/
-       alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刘畅</h4>
         
@@ -272,7 +271,7 @@ GHDEBKJIFCA<!-- raw HTML omitted --></li>
     }
     
     for (int i = 0 ; i &lt; 6 ;++i) {
-        NSLog(@&quot;%d&quot;,array[i]);
+        NSLog(@&#34;%d&#34;,array[i]);
     }
 }
 </code></pre><ol start="2">
@@ -293,7 +292,7 @@ GHDEBKJIFCA<!-- raw HTML omitted --></li>
        array[j + 1] = temp;
    }
    for (int i = 0 ; i &lt; 6 ;++i) {
-       NSLog(@&quot;%d&quot;,array[i]);
+       NSLog(@&#34;%d&#34;,array[i]);
    }
 }
 </code></pre><ol start="3">
@@ -354,7 +353,7 @@ GHDEBKJIFCA<!-- raw HTML omitted --></li>
             resultArray[i * height + j] = array[width * (height - j) - (width - i)];
         }
     }
-    NSLog(@&quot;result = %@&quot;,resultArray);
+    NSLog(@&#34;result = %@&#34;,resultArray);
 }
 </code></pre><h4 id="四单向链表翻转">四.单向链表翻转</h4>
 <pre tabindex="0"><code>struct node
@@ -382,12 +381,11 @@ void display(struct node *pHead)
 {
     while( pHead != NULL)
     {
-        printf(&quot;%d &quot;, pHead-&gt;val);
+        printf(&#34;%d &#34;, pHead-&gt;val);
         pHead = pHead-&gt;pNext;
     }
-    printf(&quot;\n&quot;);
+    printf(&#34;\n&#34;);
 }
-
 </code></pre><pre tabindex="0"><code>// 反转链表调用
 {
     struct node rootNode = *gen();

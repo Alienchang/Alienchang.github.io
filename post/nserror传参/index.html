@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="刘畅">
 <meta name="keywords" content="tech">
 <meta name="description" content="">
@@ -119,8 +119,7 @@
     
       <div class="sidebar-profile">
         <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
-          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4"|▸    archetypes/
-       alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刘畅</h4>
         
@@ -249,28 +248,27 @@
 <pre tabindex="0"><code>- (void)viewDidLoad {
     [super viewDidLoad];
     NSError *error = nil;
-    NSLog(@&quot;%p&quot;,&amp;error);
+    NSLog(@&#34;%p&#34;,&amp;error);
     [self testError:&amp;error];
 //   [self testError:&lt;#(NSError *__autoreleasing *)#&gt;];
-    NSLog(@&quot;error %@&quot;,error);
+    NSLog(@&#34;error %@&#34;,error);
 }
 
 
 - (void)testError:(NSError **)error {
-    NSLog(@&quot;%p&quot;,error);
-    *error = [NSError errorWithDomain:@&quot;&quot; code:200 userInfo:nil];
+    NSLog(@&#34;%p&#34;,error);
+    *error = [NSError errorWithDomain:@&#34;&#34; code:200 userInfo:nil];
 }
-
 </code></pre><h2 id="输出结果">输出结果</h2>
 <pre tabindex="0"><code>0x16db93ec8
 0x16db93ec0
-error Error Domain= Code=200 &quot;(null)&quot;
+error Error Domain= Code=200 &#34;(null)&#34;
 </code></pre><h2 id="1为什么要传">1.为什么要传**，</h2>
 <ul>
 <li>首先，一个*，是指针指向的地址，也就是指向的对象内存地址</li>
 <li>两个*，**是指针的指针地址，执行NSError *error = nil 后，只有指针，而没有内存地址。</li>
 </ul>
-<pre tabindex="0"><code>*error = [NSError errorWithDomain:@&quot;&quot; code:200 userInfo:nil];
+<pre tabindex="0"><code>*error = [NSError errorWithDomain:@&#34;&#34; code:200 userInfo:nil];
 </code></pre><p>这段代码的含义就是取error的指针地址，并指向一个内存
 以上知识来自大学c语言</p>
 <h2 id="2为什么输出两次地址不同">2.为什么输出两次地址不同</h2>
@@ -306,7 +304,7 @@ arc下</p>
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--disabled">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/" data-tooltip="图像磨皮原理" aria-label="NEXT: 图像磨皮原理">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -395,7 +393,7 @@ arc下</p>
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--disabled">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/" data-tooltip="图像磨皮原理" aria-label="NEXT: 图像磨皮原理">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>

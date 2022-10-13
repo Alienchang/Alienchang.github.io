@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="刘畅">
 <meta name="keywords" content="tech">
 <meta name="description" content="">
@@ -121,8 +121,7 @@
     
       <div class="sidebar-profile">
         <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
-          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4"|▸    archetypes/
-       alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刘畅</h4>
         
@@ -276,8 +275,8 @@ App Groups 是保证extension中的数据和主程序中的数据互通。</p>
 </code></pre><pre tabindex="0"><code>+ (void)sendMessage:(NSString *)message {
     // 这个位置一定要用initWithSuiteName，这个方法与stand的区别就是可以在不同target相同的group中互通数据，如果使用stand，数据是不会互通的
     //  suiteName一定要是你自己申请的GroupID
-    NSUserDefaults *userDefault = [[NSUserDefaults alloc] initWithSuiteName:@&quot;group.xxxxxx.extension&quot;];
-    [userDefault setValue:message forKey:@&quot;message&quot;];
+    NSUserDefaults *userDefault = [[NSUserDefaults alloc] initWithSuiteName:@&#34;group.xxxxxx.extension&#34;];
+    [userDefault setValue:message forKey:@&#34;message&#34;];
     [userDefault synchronize];
 }
 </code></pre><p>（3）在ViewController中添加显示message的label:</p>
@@ -294,9 +293,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 </code></pre><pre tabindex="0"><code>SendMessageIntentHandler.m
-#import &quot;SendMessageIntentHandler.h&quot;
-#import &quot;ViewController.h&quot;
-#import &quot;SiriTool.h&quot;
+#import &#34;SendMessageIntentHandler.h&#34;
+#import &#34;ViewController.h&#34;
+#import &#34;SiriTool.h&#34;
 #import &lt;Intents/Intents.h&gt;
 @interface SendMessageIntentHandler()&lt;INSendMessageIntentHandling&gt;
 
@@ -313,7 +312,7 @@ NS_ASSUME_NONNULL_END
     NSMutableArray&lt;INSendMessageRecipientResolutionResult *&gt; *resolutionResults = [NSMutableArray array];
     for (INPerson *recipient in recipients) {
         NSString *recipientName = recipient.displayName;
-        if ([recipientName isEqualToString:@&quot;小明&quot;]) {
+        if ([recipientName isEqualToString:@&#34;小明&#34;]) {
             [resolutionResults addObject:[INSendMessageRecipientResolutionResult successWithResolvedPerson:recipient]];
             completion(resolutionResults);
             return;
@@ -363,9 +362,9 @@ custom Intent 中有一个Category，这里有很多动作，但是现在好像�
 <pre tabindex="0"><code>@interface EnterRoomIntentHandler : INExtension
 
 @end
-</code></pre><pre tabindex="0"><code>#import &quot;EnterRoomIntentHandler.h&quot;
-#import &quot;EnterRoomIntent.h&quot;
-#import &quot;SiriTool.h&quot;
+</code></pre><pre tabindex="0"><code>#import &#34;EnterRoomIntentHandler.h&#34;
+#import &#34;EnterRoomIntent.h&#34;
+#import &#34;SiriTool.h&#34;
 @interface EnterRoomIntentHandler()&lt;EnterRoomIntentHandling&gt;
 @end
 @implementation EnterRoomIntentHandler
@@ -385,7 +384,7 @@ custom Intent 中有一个Category，这里有很多动作，但是现在好像�
     if (@available(iOS 12.0, *)) {
         EnterRoomIntent *intent = [EnterRoomIntent new];
         // 这个name就是intent file中的name变量，可以在EnterRoomIntentHandler中获取
-        [intent setName:@&quot;小明&quot;];
+        [intent setName:@&#34;小明&#34;];
         INShortcut *shortcut = [[INShortcut alloc] initWithIntent:intent];
         INUIAddVoiceShortcutViewController *viewController = [[INUIAddVoiceShortcutViewController alloc] initWithShortcut:shortcut];
         [viewController setModalPresentationStyle:UIModalPresentationFormSheet];

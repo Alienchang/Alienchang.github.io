@@ -25,7 +25,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
 <meta name="author" content="刘畅">
 <meta name="keywords" content="tech">
 <meta name="description" content="">
@@ -117,8 +117,7 @@
     
       <div class="sidebar-profile">
         <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
-          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4"|▸    archetypes/
-       alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
         </a>
         <h4 class="sidebar-profile-name">刘畅</h4>
         
@@ -250,17 +249,16 @@ for (Employee *employee in employees) {
 double averageSalary = totalSalary / [employees count];
 
 // but！只需要这样写
-[employees valueForKeyPath:@&quot;@avg.salary&quot;];
+[employees valueForKeyPath:@&#34;@avg.salary&#34;];
 // 还有！
-[products valueForKeyPath:@&quot;@count&quot;]; // 数组长度
-[products valueForKeyPath:@&quot;@sum.price&quot;]; // 总钱数
-[products valueForKeyPath:@&quot;@avg.price&quot;]; // 平均钱数
-[products valueForKeyPath:@&quot;@max.price&quot;]; // 最大钱数
-[products valueForKeyPath:@&quot;@min.launchedOn&quot;]; // 最后的启动时间
+[products valueForKeyPath:@&#34;@count&#34;]; // 数组长度
+[products valueForKeyPath:@&#34;@sum.price&#34;]; // 总钱数
+[products valueForKeyPath:@&#34;@avg.price&#34;]; // 平均钱数
+[products valueForKeyPath:@&#34;@max.price&#34;]; // 最大钱数
+[products valueForKeyPath:@&#34;@min.launchedOn&#34;]; // 最后的启动时间
 
-[inventory valueForKeyPath:@&quot;@unionOfObjects.name&quot;]; //取数组中对象的某一个属性组成数组
-[inventory valueForKeyPath:@&quot;@distinctUnionOfObjects.name&quot;];//同上，并去重
-
+[inventory valueForKeyPath:@&#34;@unionOfObjects.name&#34;]; //取数组中对象的某一个属性组成数组
+[inventory valueForKeyPath:@&#34;@distinctUnionOfObjects.name&#34;];//同上，并去重
 </code></pre><p>出自http://nshipster.cn/kvc-collection-operators/</p>
               
 

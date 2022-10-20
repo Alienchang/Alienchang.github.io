@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{  
+  "@context":"http://schema.org",
+  "@type":"Website",
+  "@id":"https:\/\/alienchang.github.io\/",
+  "author": {
+    "@type": "Person",
+    "name": "刘畅",
+    
+    "image": "https://avatars.githubusercontent.com/u/6712684?s=400\u0026u=458bf25808c3a6021d4e381215516bef1a0fa53f\u0026v=4"
+    
+  },
+  "name":"Alienchang blog",
+  "description":"\u003ch2 id=\u0022一视频采集流程\u0022\u003e一、视频采集流程\u003c\/h2\u003e\n\u003cpre\u003e\u003ccode\u003e1. 初始化采集会话 \n2. 设置采集设备\n3. 设置视频采集输入对象\n4. 设置视频采集输出对象及参数\n5. 开始采集\n6. 采集回调数据处理\n\u003c\/code\u003e\u003c\/pre\u003e\n\u003ch3 id=\u0022初始化采集会话\u0022\u003e初始化采集会话\u003c\/h3\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)setupCaptureSession {\n    self.captureSession = [AVCaptureSession new];\n    [self.captureSession beginConfiguration];\n    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {\n        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];\n    }\n    [self.captureSession commitConfiguration];\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch3 id=\u0022设置采集设备\u0022\u003e设置采集设备\u003c\/h3\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)setupDevice {\n    \/\/ 这里我们获取前置摄像头\n    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];\n    \/\/ 一般直播16-18，电影24\n    [self setFPS:16];\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e\/\/\/ 获取采集设备\n- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {\n    AVCaptureDevice *deviceRet = nil;\n    if (position != AVCaptureDevicePositionUnspecified) {\n        NSArray\u0026lt;AVCaptureDeviceType\u0026gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    \/\/ 广角镜头\n                                                      AVCaptureDeviceTypeBuiltInDualCamera];        \/\/ 正常情况下是主摄\n        \n        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];\n        \n        NSArray\u0026lt;AVCaptureDevice *\u0026gt; *devices = sessionDiscovery.devices;\/\/当前可用的AVCaptureDevice集合\n        for (AVCaptureDevice *device in devices) {\n            if ([device position] == position) {\n                deviceRet = device;\n            }\n        }\n    }\n    return deviceRet;\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e\/\/ 这是设备输出的fps\n- (void)setFPS:(NSInteger)fps {\n    if (fps \u0026gt; 0) {\n        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;\n        if(!frameRateRange) {\n            \/\/ 无法获取摄像头\n            return;\n        }\n\n        if (fps \u0026gt;= frameRateRange.maxFrameRate) {\n            fps = frameRateRange.maxFrameRate;\n        } else if (fps \u0026lt;= frameRateRange.minFrameRate) {\n            fps = frameRateRange.minFrameRate;\n        }\n\n        CMTime frameDuration = CMTimeMake(1 , (int)fps);\n        [self.captureSession beginConfiguration];\n        NSError *error = nil;\n        if ([self.device lockForConfiguration:\u0026amp;error]) {\n            self.device.activeVideoMaxFrameDuration = frameDuration;\n            self.device.activeVideoMinFrameDuration = frameDuration;\n            [self.device unlockForConfiguration];\n        } else {\n            \/\/ 设置失败\n        }\n        [self.captureSession commitConfiguration];\n    }\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch3 id=\u0022设置视频采集输入对象\u0022\u003e设置视频采集输入对象\u003c\/h3\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)setupInput {\n    NSError *error = nil;\n    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:\u0026amp;error];\n    [self.captureSession beginConfiguration];\n    if ([self.captureSession canAddInput:self.deviceInput]) {\n        [self.captureSession addInput:self.deviceInput];\n    }\n    [self.captureSession commitConfiguration];\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch3 id=\u0022设置视频采集输出对象及参数\u0022\u003e设置视频采集输出对象及参数\u003c\/h3\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)setupOutput {\n    self.deviceOutput = [AVCaptureVideoDataOutput new];\n    \/\/ 输出下一帧时是否丢弃上一帧\n    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;\n    \/\/ 输出视频色彩空间为yuv420（也可以为RGB）\n    self.deviceOutput.videoSettings = @{\n        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]\n    };\n    \/\/ 设置视频数据输出回调\n    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];\n    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];\n    \n    \/\/ 设置输出图像方向\n    if ([self.captureConnection isVideoOrientationSupported]) {\n        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];\n    }\n    \n    \/\/ 设置是否镜像\n    if ([self.captureConnection isVideoMirroringSupported]) {\n        [self.captureConnection setVideoMirrored:YES];\n    }\n    \n    [self.captureSession beginConfiguration];\n    if ([self.captureSession canAddOutput:self.deviceOutput]) {\n        [self.captureSession addOutput:self.deviceOutput];\n    }\n    [self.captureSession commitConfiguration];\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch3 id=\u0022开始采集\u0022\u003e开始采集\u003c\/h3\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)startCatpure {\n    if (!(self.device \u0026amp;\u0026amp; self.deviceInput \u0026amp;\u0026amp; self.deviceOutput)) {\n        return;\n    }\n    \n    if (self.captureSession \u0026amp;\u0026amp; ![self.captureSession isRunning]) {\n        [self.captureSession startRunning];\n    }\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch3 id=\u0022采集回调数据处理\u0022\u003e采集回调数据处理\u003c\/h3\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate\n- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {\n    \/\/获取每一帧图像信息\n    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);\n    NSLog(@\u0026#34;%@\u0026#34;,pixelBuffer);\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003cp\u003e本文demo： \u003ca href=\u0022https:\/\/github.com\/Alienchang\/TestiOSCapture\u0022\u003ehttps:\/\/github.com\/Alienchang\/TestiOSCapture\u003c\/a\u003e\u003c\/p\u003e",
+  "url":"https:\/\/alienchang.github.io\/post\/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86\/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88\/",
+  "keywords":"[视频采集]"
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="刘畅">
+<meta name="keywords" content="视频采集">
+<meta name="description" content="一、视频采集流程
+1. 初始化采集会话 
+2. 设置采集设备
+3. 设置视频采集输入对象
+4. 设置视频采集输出对象及参数
+5. 开始采集
+6. 采集回调数据处理
+
+初始化采集会话
+- (void)setupCaptureSession {
+    self.captureSession = [AVCaptureSession new];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置采集设备
+- (void)setupDevice {
+    // 这里我们获取前置摄像头
+    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
+    // 一般直播16-18，电影24
+    [self setFPS:16];
+}
+/// 获取采集设备
+- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
+    AVCaptureDevice *deviceRet = nil;
+    if (position != AVCaptureDevicePositionUnspecified) {
+        NSArray&lt;AVCaptureDeviceType&gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
+                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
+        
+        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        
+        NSArray&lt;AVCaptureDevice *&gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
+        for (AVCaptureDevice *device in devices) {
+            if ([device position] == position) {
+                deviceRet = device;
+            }
+        }
+    }
+    return deviceRet;
+}
+// 这是设备输出的fps
+- (void)setFPS:(NSInteger)fps {
+    if (fps &gt; 0) {
+        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
+        if(!frameRateRange) {
+            // 无法获取摄像头
+            return;
+        }
+
+        if (fps &gt;= frameRateRange.maxFrameRate) {
+            fps = frameRateRange.maxFrameRate;
+        } else if (fps &lt;= frameRateRange.minFrameRate) {
+            fps = frameRateRange.minFrameRate;
+        }
+
+        CMTime frameDuration = CMTimeMake(1 , (int)fps);
+        [self.captureSession beginConfiguration];
+        NSError *error = nil;
+        if ([self.device lockForConfiguration:&amp;error]) {
+            self.device.activeVideoMaxFrameDuration = frameDuration;
+            self.device.activeVideoMinFrameDuration = frameDuration;
+            [self.device unlockForConfiguration];
+        } else {
+            // 设置失败
+        }
+        [self.captureSession commitConfiguration];
+    }
+}
+设置视频采集输入对象
+- (void)setupInput {
+    NSError *error = nil;
+    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;error];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddInput:self.deviceInput]) {
+        [self.captureSession addInput:self.deviceInput];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置视频采集输出对象及参数
+- (void)setupOutput {
+    self.deviceOutput = [AVCaptureVideoDataOutput new];
+    // 输出下一帧时是否丢弃上一帧
+    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
+    // 输出视频色彩空间为yuv420（也可以为RGB）
+    self.deviceOutput.videoSettings = @{
+        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+    };
+    // 设置视频数据输出回调
+    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
+    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    // 设置输出图像方向
+    if ([self.captureConnection isVideoOrientationSupported]) {
+        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 设置是否镜像
+    if ([self.captureConnection isVideoMirroringSupported]) {
+        [self.captureConnection setVideoMirrored:YES];
+    }
+    
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddOutput:self.deviceOutput]) {
+        [self.captureSession addOutput:self.deviceOutput];
+    }
+    [self.captureSession commitConfiguration];
+}
+开始采集
+- (void)startCatpure {
+    if (!(self.device &amp;&amp; self.deviceInput &amp;&amp; self.deviceOutput)) {
+        return;
+    }
+    
+    if (self.captureSession &amp;&amp; ![self.captureSession isRunning]) {
+        [self.captureSession startRunning];
+    }
+}
+采集回调数据处理
+#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    //获取每一帧图像信息
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    NSLog(@&#34;%@&#34;,pixelBuffer);
+}
+本文demo： https://github.com/Alienchang/TestiOSCapture">
+
+
+<meta property="og:description" content="一、视频采集流程
+1. 初始化采集会话 
+2. 设置采集设备
+3. 设置视频采集输入对象
+4. 设置视频采集输出对象及参数
+5. 开始采集
+6. 采集回调数据处理
+
+初始化采集会话
+- (void)setupCaptureSession {
+    self.captureSession = [AVCaptureSession new];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置采集设备
+- (void)setupDevice {
+    // 这里我们获取前置摄像头
+    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
+    // 一般直播16-18，电影24
+    [self setFPS:16];
+}
+/// 获取采集设备
+- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
+    AVCaptureDevice *deviceRet = nil;
+    if (position != AVCaptureDevicePositionUnspecified) {
+        NSArray&lt;AVCaptureDeviceType&gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
+                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
+        
+        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        
+        NSArray&lt;AVCaptureDevice *&gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
+        for (AVCaptureDevice *device in devices) {
+            if ([device position] == position) {
+                deviceRet = device;
+            }
+        }
+    }
+    return deviceRet;
+}
+// 这是设备输出的fps
+- (void)setFPS:(NSInteger)fps {
+    if (fps &gt; 0) {
+        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
+        if(!frameRateRange) {
+            // 无法获取摄像头
+            return;
+        }
+
+        if (fps &gt;= frameRateRange.maxFrameRate) {
+            fps = frameRateRange.maxFrameRate;
+        } else if (fps &lt;= frameRateRange.minFrameRate) {
+            fps = frameRateRange.minFrameRate;
+        }
+
+        CMTime frameDuration = CMTimeMake(1 , (int)fps);
+        [self.captureSession beginConfiguration];
+        NSError *error = nil;
+        if ([self.device lockForConfiguration:&amp;error]) {
+            self.device.activeVideoMaxFrameDuration = frameDuration;
+            self.device.activeVideoMinFrameDuration = frameDuration;
+            [self.device unlockForConfiguration];
+        } else {
+            // 设置失败
+        }
+        [self.captureSession commitConfiguration];
+    }
+}
+设置视频采集输入对象
+- (void)setupInput {
+    NSError *error = nil;
+    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;error];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddInput:self.deviceInput]) {
+        [self.captureSession addInput:self.deviceInput];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置视频采集输出对象及参数
+- (void)setupOutput {
+    self.deviceOutput = [AVCaptureVideoDataOutput new];
+    // 输出下一帧时是否丢弃上一帧
+    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
+    // 输出视频色彩空间为yuv420（也可以为RGB）
+    self.deviceOutput.videoSettings = @{
+        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+    };
+    // 设置视频数据输出回调
+    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
+    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    // 设置输出图像方向
+    if ([self.captureConnection isVideoOrientationSupported]) {
+        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 设置是否镜像
+    if ([self.captureConnection isVideoMirroringSupported]) {
+        [self.captureConnection setVideoMirrored:YES];
+    }
+    
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddOutput:self.deviceOutput]) {
+        [self.captureSession addOutput:self.deviceOutput];
+    }
+    [self.captureSession commitConfiguration];
+}
+开始采集
+- (void)startCatpure {
+    if (!(self.device &amp;&amp; self.deviceInput &amp;&amp; self.deviceOutput)) {
+        return;
+    }
+    
+    if (self.captureSession &amp;&amp; ![self.captureSession isRunning]) {
+        [self.captureSession startRunning];
+    }
+}
+采集回调数据处理
+#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    //获取每一帧图像信息
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    NSLog(@&#34;%@&#34;,pixelBuffer);
+}
+本文demo： https://github.com/Alienchang/TestiOSCapture">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOS视频采集以及预览">
+<meta name="twitter:title" content="IOS视频采集以及预览">
+<meta property="og:url" content="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/">
+<meta property="twitter:url" content="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/">
+<meta property="og:site_name" content="Alienchang blog">
+<meta property="og:description" content="一、视频采集流程
+1. 初始化采集会话 
+2. 设置采集设备
+3. 设置视频采集输入对象
+4. 设置视频采集输出对象及参数
+5. 开始采集
+6. 采集回调数据处理
+
+初始化采集会话
+- (void)setupCaptureSession {
+    self.captureSession = [AVCaptureSession new];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置采集设备
+- (void)setupDevice {
+    // 这里我们获取前置摄像头
+    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
+    // 一般直播16-18，电影24
+    [self setFPS:16];
+}
+/// 获取采集设备
+- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
+    AVCaptureDevice *deviceRet = nil;
+    if (position != AVCaptureDevicePositionUnspecified) {
+        NSArray&lt;AVCaptureDeviceType&gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
+                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
+        
+        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        
+        NSArray&lt;AVCaptureDevice *&gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
+        for (AVCaptureDevice *device in devices) {
+            if ([device position] == position) {
+                deviceRet = device;
+            }
+        }
+    }
+    return deviceRet;
+}
+// 这是设备输出的fps
+- (void)setFPS:(NSInteger)fps {
+    if (fps &gt; 0) {
+        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
+        if(!frameRateRange) {
+            // 无法获取摄像头
+            return;
+        }
+
+        if (fps &gt;= frameRateRange.maxFrameRate) {
+            fps = frameRateRange.maxFrameRate;
+        } else if (fps &lt;= frameRateRange.minFrameRate) {
+            fps = frameRateRange.minFrameRate;
+        }
+
+        CMTime frameDuration = CMTimeMake(1 , (int)fps);
+        [self.captureSession beginConfiguration];
+        NSError *error = nil;
+        if ([self.device lockForConfiguration:&amp;error]) {
+            self.device.activeVideoMaxFrameDuration = frameDuration;
+            self.device.activeVideoMinFrameDuration = frameDuration;
+            [self.device unlockForConfiguration];
+        } else {
+            // 设置失败
+        }
+        [self.captureSession commitConfiguration];
+    }
+}
+设置视频采集输入对象
+- (void)setupInput {
+    NSError *error = nil;
+    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;error];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddInput:self.deviceInput]) {
+        [self.captureSession addInput:self.deviceInput];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置视频采集输出对象及参数
+- (void)setupOutput {
+    self.deviceOutput = [AVCaptureVideoDataOutput new];
+    // 输出下一帧时是否丢弃上一帧
+    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
+    // 输出视频色彩空间为yuv420（也可以为RGB）
+    self.deviceOutput.videoSettings = @{
+        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+    };
+    // 设置视频数据输出回调
+    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
+    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    // 设置输出图像方向
+    if ([self.captureConnection isVideoOrientationSupported]) {
+        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 设置是否镜像
+    if ([self.captureConnection isVideoMirroringSupported]) {
+        [self.captureConnection setVideoMirrored:YES];
+    }
+    
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddOutput:self.deviceOutput]) {
+        [self.captureSession addOutput:self.deviceOutput];
+    }
+    [self.captureSession commitConfiguration];
+}
+开始采集
+- (void)startCatpure {
+    if (!(self.device &amp;&amp; self.deviceInput &amp;&amp; self.deviceOutput)) {
+        return;
+    }
+    
+    if (self.captureSession &amp;&amp; ![self.captureSession isRunning]) {
+        [self.captureSession startRunning];
+    }
+}
+采集回调数据处理
+#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    //获取每一帧图像信息
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    NSLog(@&#34;%@&#34;,pixelBuffer);
+}
+本文demo： https://github.com/Alienchang/TestiOSCapture">
+<meta name="twitter:description" content="一、视频采集流程
+1. 初始化采集会话 
+2. 设置采集设备
+3. 设置视频采集输入对象
+4. 设置视频采集输出对象及参数
+5. 开始采集
+6. 采集回调数据处理
+
+初始化采集会话
+- (void)setupCaptureSession {
+    self.captureSession = [AVCaptureSession new];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置采集设备
+- (void)setupDevice {
+    // 这里我们获取前置摄像头
+    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
+    // 一般直播16-18，电影24
+    [self setFPS:16];
+}
+/// 获取采集设备
+- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
+    AVCaptureDevice *deviceRet = nil;
+    if (position != AVCaptureDevicePositionUnspecified) {
+        NSArray&lt;AVCaptureDeviceType&gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
+                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
+        
+        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        
+        NSArray&lt;AVCaptureDevice *&gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
+        for (AVCaptureDevice *device in devices) {
+            if ([device position] == position) {
+                deviceRet = device;
+            }
+        }
+    }
+    return deviceRet;
+}
+// 这是设备输出的fps
+- (void)setFPS:(NSInteger)fps {
+    if (fps &gt; 0) {
+        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
+        if(!frameRateRange) {
+            // 无法获取摄像头
+            return;
+        }
+
+        if (fps &gt;= frameRateRange.maxFrameRate) {
+            fps = frameRateRange.maxFrameRate;
+        } else if (fps &lt;= frameRateRange.minFrameRate) {
+            fps = frameRateRange.minFrameRate;
+        }
+
+        CMTime frameDuration = CMTimeMake(1 , (int)fps);
+        [self.captureSession beginConfiguration];
+        NSError *error = nil;
+        if ([self.device lockForConfiguration:&amp;error]) {
+            self.device.activeVideoMaxFrameDuration = frameDuration;
+            self.device.activeVideoMinFrameDuration = frameDuration;
+            [self.device unlockForConfiguration];
+        } else {
+            // 设置失败
+        }
+        [self.captureSession commitConfiguration];
+    }
+}
+设置视频采集输入对象
+- (void)setupInput {
+    NSError *error = nil;
+    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;error];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddInput:self.deviceInput]) {
+        [self.captureSession addInput:self.deviceInput];
+    }
+    [self.captureSession commitConfiguration];
+}
+设置视频采集输出对象及参数
+- (void)setupOutput {
+    self.deviceOutput = [AVCaptureVideoDataOutput new];
+    // 输出下一帧时是否丢弃上一帧
+    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
+    // 输出视频色彩空间为yuv420（也可以为RGB）
+    self.deviceOutput.videoSettings = @{
+        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+    };
+    // 设置视频数据输出回调
+    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
+    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    // 设置输出图像方向
+    if ([self.captureConnection isVideoOrientationSupported]) {
+        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 设置是否镜像
+    if ([self.captureConnection isVideoMirroringSupported]) {
+        [self.captureConnection setVideoMirrored:YES];
+    }
+    
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddOutput:self.deviceOutput]) {
+        [self.captureSession addOutput:self.deviceOutput];
+    }
+    [self.captureSession commitConfiguration];
+}
+开始采集
+- (void)startCatpure {
+    if (!(self.device &amp;&amp; self.deviceInput &amp;&amp; self.deviceOutput)) {
+        return;
+    }
+    
+    if (self.captureSession &amp;&amp; ![self.captureSession isRunning]) {
+        [self.captureSession startRunning];
+    }
+}
+采集回调数据处理
+#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    //获取每一帧图像信息
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    NSLog(@&#34;%@&#34;,pixelBuffer);
+}
+本文demo： https://github.com/Alienchang/TestiOSCapture">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-10-20T14:14:19">
+  
+  
+    <meta property="article:modified_time" content="2022-10-20T14:14:19">
+  
+  
+  
+    
+      <meta property="article:section" content="category">
+    
+      <meta property="article:section" content="subcategory">
+    
+  
+  
+    
+      <meta property="article:tag" content="iOS">
+    
+      <meta property="article:tag" content="图像处理">
+    
+      <meta property="article:tag" content="视频采集">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/6712684?s=400&u=458bf25808c3a6021d4e381215516bef1a0fa53f&v=4">
+  <meta property="twitter:image" content="https://avatars.githubusercontent.com/u/6712684?s=400&u=458bf25808c3a6021d4e381215516bef1a0fa53f&v=4">
+
+
+
+
+
+
+    <title>IOS视频采集以及预览</title>
+
+    <link rel="icon" href="https://alienchang.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://alienchang.github.io/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://alienchang.github.io/" aria-label="Go to homepage">Alienchang blog</a>
+  </div>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">刘畅</h4>
+        
+          <h5 class="sidebar-profile-bio">记录生活学习</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Alienchang" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      IOS视频采集以及预览
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-10-20T14:14:19&#43;08:00">
+        
+  October 20, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <h2 id="一视频采集流程">一、视频采集流程</h2>
+<pre><code>1. 初始化采集会话 
+2. 设置采集设备
+3. 设置视频采集输入对象
+4. 设置视频采集输出对象及参数
+5. 开始采集
+6. 采集回调数据处理
+</code></pre>
+<h3 id="初始化采集会话">初始化采集会话</h3>
+<pre tabindex="0"><code>- (void)setupCaptureSession {
+    self.captureSession = [AVCaptureSession new];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
+    }
+    [self.captureSession commitConfiguration];
+}
+</code></pre><h3 id="设置采集设备">设置采集设备</h3>
+<pre tabindex="0"><code>- (void)setupDevice {
+    // 这里我们获取前置摄像头
+    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
+    // 一般直播16-18，电影24
+    [self setFPS:16];
+}
+</code></pre><pre tabindex="0"><code>/// 获取采集设备
+- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
+    AVCaptureDevice *deviceRet = nil;
+    if (position != AVCaptureDevicePositionUnspecified) {
+        NSArray&lt;AVCaptureDeviceType&gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
+                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
+        
+        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        
+        NSArray&lt;AVCaptureDevice *&gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
+        for (AVCaptureDevice *device in devices) {
+            if ([device position] == position) {
+                deviceRet = device;
+            }
+        }
+    }
+    return deviceRet;
+}
+</code></pre><pre tabindex="0"><code>// 这是设备输出的fps
+- (void)setFPS:(NSInteger)fps {
+    if (fps &gt; 0) {
+        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
+        if(!frameRateRange) {
+            // 无法获取摄像头
+            return;
+        }
+
+        if (fps &gt;= frameRateRange.maxFrameRate) {
+            fps = frameRateRange.maxFrameRate;
+        } else if (fps &lt;= frameRateRange.minFrameRate) {
+            fps = frameRateRange.minFrameRate;
+        }
+
+        CMTime frameDuration = CMTimeMake(1 , (int)fps);
+        [self.captureSession beginConfiguration];
+        NSError *error = nil;
+        if ([self.device lockForConfiguration:&amp;error]) {
+            self.device.activeVideoMaxFrameDuration = frameDuration;
+            self.device.activeVideoMinFrameDuration = frameDuration;
+            [self.device unlockForConfiguration];
+        } else {
+            // 设置失败
+        }
+        [self.captureSession commitConfiguration];
+    }
+}
+</code></pre><h3 id="设置视频采集输入对象">设置视频采集输入对象</h3>
+<pre tabindex="0"><code>- (void)setupInput {
+    NSError *error = nil;
+    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;error];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddInput:self.deviceInput]) {
+        [self.captureSession addInput:self.deviceInput];
+    }
+    [self.captureSession commitConfiguration];
+}
+</code></pre><h3 id="设置视频采集输出对象及参数">设置视频采集输出对象及参数</h3>
+<pre tabindex="0"><code>- (void)setupOutput {
+    self.deviceOutput = [AVCaptureVideoDataOutput new];
+    // 输出下一帧时是否丢弃上一帧
+    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
+    // 输出视频色彩空间为yuv420（也可以为RGB）
+    self.deviceOutput.videoSettings = @{
+        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+    };
+    // 设置视频数据输出回调
+    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
+    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    // 设置输出图像方向
+    if ([self.captureConnection isVideoOrientationSupported]) {
+        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 设置是否镜像
+    if ([self.captureConnection isVideoMirroringSupported]) {
+        [self.captureConnection setVideoMirrored:YES];
+    }
+    
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddOutput:self.deviceOutput]) {
+        [self.captureSession addOutput:self.deviceOutput];
+    }
+    [self.captureSession commitConfiguration];
+}
+</code></pre><h3 id="开始采集">开始采集</h3>
+<pre tabindex="0"><code>- (void)startCatpure {
+    if (!(self.device &amp;&amp; self.deviceInput &amp;&amp; self.deviceOutput)) {
+        return;
+    }
+    
+    if (self.captureSession &amp;&amp; ![self.captureSession isRunning]) {
+        [self.captureSession startRunning];
+    }
+}
+</code></pre><h3 id="采集回调数据处理">采集回调数据处理</h3>
+<pre tabindex="0"><code>#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    //获取每一帧图像信息
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    NSLog(@&#34;%@&#34;,pixelBuffer);
+}
+</code></pre><p>本文demo： <a href="https://github.com/Alienchang/TestiOSCapture">https://github.com/Alienchang/TestiOSCapture</a></p>
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/ios/">iOS</a>
+
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/">图像处理</a>
+
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86/">视频采集</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/" data-tooltip="图像色彩格式" aria-label="PREVIOUS: 图像色彩格式">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/alienchang.github.io\/post\/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86\/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88\/';
+        
+          this.page.identifier = '\/post\/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86\/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2022 刘畅. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--disabled">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/" data-tooltip="图像色彩格式" aria-label="PREVIOUS: 图像色彩格式">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">刘畅</h4>
+    
+      <div id="about-card-bio">记录生活学习</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        iOS资深开发工程师
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        中国
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://alienchang.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://alienchang.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+</html>
+

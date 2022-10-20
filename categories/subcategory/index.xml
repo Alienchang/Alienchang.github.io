@@ -6,7 +6,142 @@
     <description>Recent content in subcategory on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Oct 2022 15:18:48 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/subcategory/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 20 Oct 2022 14:14:19 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/subcategory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IOS视频采集以及预览</title>
+      <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/</link>
+      <pubDate>Thu, 20 Oct 2022 14:14:19 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/</guid>
+      <description>&lt;h2 id=&#34;一视频采集流程&#34;&gt;一、视频采集流程&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;1. 初始化采集会话 
+2. 设置采集设备
+3. 设置视频采集输入对象
+4. 设置视频采集输出对象及参数
+5. 开始采集
+6. 采集回调数据处理
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;初始化采集会话&#34;&gt;初始化采集会话&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)setupCaptureSession {
+    self.captureSession = [AVCaptureSession new];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
+    }
+    [self.captureSession commitConfiguration];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;设置采集设备&#34;&gt;设置采集设备&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)setupDevice {
+    // 这里我们获取前置摄像头
+    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
+    // 一般直播16-18，电影24
+    [self setFPS:16];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/// 获取采集设备
+- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
+    AVCaptureDevice *deviceRet = nil;
+    if (position != AVCaptureDevicePositionUnspecified) {
+        NSArray&amp;lt;AVCaptureDeviceType&amp;gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
+                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
+        
+        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        
+        NSArray&amp;lt;AVCaptureDevice *&amp;gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
+        for (AVCaptureDevice *device in devices) {
+            if ([device position] == position) {
+                deviceRet = device;
+            }
+        }
+    }
+    return deviceRet;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;// 这是设备输出的fps
+- (void)setFPS:(NSInteger)fps {
+    if (fps &amp;gt; 0) {
+        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
+        if(!frameRateRange) {
+            // 无法获取摄像头
+            return;
+        }
+
+        if (fps &amp;gt;= frameRateRange.maxFrameRate) {
+            fps = frameRateRange.maxFrameRate;
+        } else if (fps &amp;lt;= frameRateRange.minFrameRate) {
+            fps = frameRateRange.minFrameRate;
+        }
+
+        CMTime frameDuration = CMTimeMake(1 , (int)fps);
+        [self.captureSession beginConfiguration];
+        NSError *error = nil;
+        if ([self.device lockForConfiguration:&amp;amp;error]) {
+            self.device.activeVideoMaxFrameDuration = frameDuration;
+            self.device.activeVideoMinFrameDuration = frameDuration;
+            [self.device unlockForConfiguration];
+        } else {
+            // 设置失败
+        }
+        [self.captureSession commitConfiguration];
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;设置视频采集输入对象&#34;&gt;设置视频采集输入对象&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)setupInput {
+    NSError *error = nil;
+    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;amp;error];
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddInput:self.deviceInput]) {
+        [self.captureSession addInput:self.deviceInput];
+    }
+    [self.captureSession commitConfiguration];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;设置视频采集输出对象及参数&#34;&gt;设置视频采集输出对象及参数&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)setupOutput {
+    self.deviceOutput = [AVCaptureVideoDataOutput new];
+    // 输出下一帧时是否丢弃上一帧
+    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
+    // 输出视频色彩空间为yuv420（也可以为RGB）
+    self.deviceOutput.videoSettings = @{
+        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+    };
+    // 设置视频数据输出回调
+    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
+    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    // 设置输出图像方向
+    if ([self.captureConnection isVideoOrientationSupported]) {
+        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    }
+    
+    // 设置是否镜像
+    if ([self.captureConnection isVideoMirroringSupported]) {
+        [self.captureConnection setVideoMirrored:YES];
+    }
+    
+    [self.captureSession beginConfiguration];
+    if ([self.captureSession canAddOutput:self.deviceOutput]) {
+        [self.captureSession addOutput:self.deviceOutput];
+    }
+    [self.captureSession commitConfiguration];
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;开始采集&#34;&gt;开始采集&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)startCatpure {
+    if (!(self.device &amp;amp;&amp;amp; self.deviceInput &amp;amp;&amp;amp; self.deviceOutput)) {
+        return;
+    }
+    
+    if (self.captureSession &amp;amp;&amp;amp; ![self.captureSession isRunning]) {
+        [self.captureSession startRunning];
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;采集回调数据处理&#34;&gt;采集回调数据处理&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    //获取每一帧图像信息
+    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    NSLog(@&amp;#34;%@&amp;#34;,pixelBuffer);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;本文demo： &lt;a href=&#34;https://github.com/Alienchang/TestiOSCapture&#34;&gt;https://github.com/Alienchang/TestiOSCapture&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>图像色彩格式</title>
       <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/</link>

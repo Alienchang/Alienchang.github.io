@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{  
+  "@context":"http://schema.org",
+  "@type":"Website",
+  "@id":"https:\/\/alienchang.github.io\/",
+  "author": {
+    "@type": "Person",
+    "name": "刘畅",
+    
+    "image": "https://avatars.githubusercontent.com/u/6712684?s=400\u0026u=458bf25808c3a6021d4e381215516bef1a0fa53f\u0026v=4"
+    
+  },
+  "name":"Alienchang blog",
+  "description":"\u003ch2 id=\u0022一avplayer监听播放结束实现循环播放\u0022\u003e一、AVPlayer监听播放结束，实现循环播放\u003c\/h2\u003e\n\u003col\u003e\n\u003cli\u003e添加播放器播放结束监听\u003c\/li\u003e\n\u003c\/ol\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e[[NSNotificationCenter defaultCenter] addObserver:self\n                                         selector:@selector(playerItemDidPlayToEndTime:)\n                                             name:AVPlayerItemDidPlayToEndTimeNotification\n                                           object:nil];\n\u003c\/code\u003e\u003c\/pre\u003e\u003col start=\u00222\u0022\u003e\n\u003cli\u003e在结束访法中seek视频到开始时间点\u003c\/li\u003e\n\u003c\/ol\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {\n    [self.player seekToTime:kCMTimeZero]\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch2 id=\u0022二avplayerlooper循环播放\u0022\u003e二、AVPlayerLooper循环播放\u003c\/h2\u003e\n\u003cp\u003e原生方法，可完全替代方法一\u003c\/p\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003eNSURL *url = nil;\nAVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];\nAVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];\nAVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];\nAVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];\n[player play];\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch2 id=\u0022三mpmovieplayercontroller实现循环播放\u0022\u003e三、MPMoviePlayerController实现循环播放\u003c\/h2\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003eself.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@\u0026#34;new\u0026#34; ofType:@\u0026#34;mp4\u0026#34;]];\nself.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];\n[self.view addSubview:self.player.view];\nself.player.shouldAutoplay = YES;\nself.player.repeatMode = MPMovieRepeatModeOne;\n[self.player.view setFrame:self.view.bounds];\nself.player.scalingMode = MPMovieScalingModeAspectFill;\n[self.player play];\n\u003c\/code\u003e\u003c\/pre\u003e\u003ch2 id=\u0022四ijkplayer循环播放\u0022\u003e四、ijkplayer循环播放\u003c\/h2\u003e\n\u003cp\u003e使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。\u003c\/p\u003e\n\u003cp\u003e先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop\u003c\/p\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003e- (void)play\n{\n    if (!_mediaPlayer)\n        return;\n\n    [self setScreenOn:_keepScreenOnWhilePlaying];\n\n    [self startHudTimer];\n    if (self.loop) {\n        ijkmp_set_loop(_mediaPlayer, INT_MAX);\n    } else {\n        ijkmp_set_loop(_mediaPlayer, 1);\n    }\n    \n    ijkmp_start(_mediaPlayer);\n}\n\u003c\/code\u003e\u003c\/pre\u003e\u003cp\u003e使用方法\u003c\/p\u003e\n\u003cpre tabindex=\u00220\u0022\u003e\u003ccode\u003eself.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];\nself.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;\nself.videoPlayer.view.frame = self.view.bounds;\nself.videoPlayer.loop = YES;\nself.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;\nself.videoPlayer.shouldAutoplay = YES;\n\/\/        self.containView.autoresizesSubviews = YES;\n[self.view addSubview:self.videoPlayer.view];\n[self.videoPlayer prepareToPlay];\n[self.videoPlayer play];\n\u003c\/code\u003e\u003c\/pre\u003e",
+  "url":"https:\/\/alienchang.github.io\/post\/%E6%92%AD%E6%94%BE%E5%99%A8\/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE\/",
+  "keywords":"[播放器、循环播放]"
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="刘畅">
+<meta name="keywords" content="播放器、循环播放">
+<meta name="description" content="一、AVPlayer监听播放结束，实现循环播放
+
+添加播放器播放结束监听
+
+[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+
+在结束访法中seek视频到开始时间点
+
+- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+二、AVPlayerLooper循环播放
+原生方法，可完全替代方法一
+NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+三、MPMoviePlayerController实现循环播放
+self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&#34;new&#34; ofType:@&#34;mp4&#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+四、ijkplayer循环播放
+使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。
+先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop
+- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+使用方法
+self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+">
+
+
+<meta property="og:description" content="一、AVPlayer监听播放结束，实现循环播放
+
+添加播放器播放结束监听
+
+[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+
+在结束访法中seek视频到开始时间点
+
+- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+二、AVPlayerLooper循环播放
+原生方法，可完全替代方法一
+NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+三、MPMoviePlayerController实现循环播放
+self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&#34;new&#34; ofType:@&#34;mp4&#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+四、ijkplayer循环播放
+使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。
+先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop
+- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+使用方法
+self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOS视频循环播放">
+<meta name="twitter:title" content="IOS视频循环播放">
+<meta property="og:url" content="https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/">
+<meta property="twitter:url" content="https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/">
+<meta property="og:site_name" content="Alienchang blog">
+<meta property="og:description" content="一、AVPlayer监听播放结束，实现循环播放
+
+添加播放器播放结束监听
+
+[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+
+在结束访法中seek视频到开始时间点
+
+- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+二、AVPlayerLooper循环播放
+原生方法，可完全替代方法一
+NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+三、MPMoviePlayerController实现循环播放
+self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&#34;new&#34; ofType:@&#34;mp4&#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+四、ijkplayer循环播放
+使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。
+先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop
+- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+使用方法
+self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+">
+<meta name="twitter:description" content="一、AVPlayer监听播放结束，实现循环播放
+
+添加播放器播放结束监听
+
+[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+
+在结束访法中seek视频到开始时间点
+
+- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+二、AVPlayerLooper循环播放
+原生方法，可完全替代方法一
+NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+三、MPMoviePlayerController实现循环播放
+self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&#34;new&#34; ofType:@&#34;mp4&#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+四、ijkplayer循环播放
+使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。
+先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop
+- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+使用方法
+self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2022-12-17T17:18:48">
+  
+  
+    <meta property="article:modified_time" content="2022-12-17T17:18:48">
+  
+  
+  
+    
+      <meta property="article:section" content="category">
+    
+      <meta property="article:section" content="subcategory">
+    
+  
+  
+    
+      <meta property="article:tag" content="iOS">
+    
+      <meta property="article:tag" content="视频播放器">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/6712684?s=400&u=458bf25808c3a6021d4e381215516bef1a0fa53f&v=4">
+  <meta property="twitter:image" content="https://avatars.githubusercontent.com/u/6712684?s=400&u=458bf25808c3a6021d4e381215516bef1a0fa53f&v=4">
+
+
+
+
+
+
+    <title>IOS视频循环播放</title>
+
+    <link rel="icon" href="https://alienchang.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://alienchang.github.io/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://alienchang.github.io/" aria-label="Go to homepage">Alienchang blog</a>
+  </div>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">刘畅</h4>
+        
+          <h5 class="sidebar-profile-bio">记录生活学习</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Alienchang" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      IOS视频循环播放
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-12-17T17:18:48&#43;08:00">
+        
+  December 17, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <h2 id="一avplayer监听播放结束实现循环播放">一、AVPlayer监听播放结束，实现循环播放</h2>
+<ol>
+<li>添加播放器播放结束监听</li>
+</ol>
+<pre tabindex="0"><code>[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+</code></pre><ol start="2">
+<li>在结束访法中seek视频到开始时间点</li>
+</ol>
+<pre tabindex="0"><code>- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+</code></pre><h2 id="二avplayerlooper循环播放">二、AVPlayerLooper循环播放</h2>
+<p>原生方法，可完全替代方法一</p>
+<pre tabindex="0"><code>NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+</code></pre><h2 id="三mpmovieplayercontroller实现循环播放">三、MPMoviePlayerController实现循环播放</h2>
+<pre tabindex="0"><code>self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&#34;new&#34; ofType:@&#34;mp4&#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+</code></pre><h2 id="四ijkplayer循环播放">四、ijkplayer循环播放</h2>
+<p>使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。</p>
+<p>先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop</p>
+<pre tabindex="0"><code>- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+</code></pre><p>使用方法</p>
+<pre tabindex="0"><code>self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+</code></pre>
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/ios/">iOS</a>
+
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8/">视频播放器</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/" data-tooltip="OpenCV识别人脸" aria-label="NEXT: OpenCV识别人脸">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/" data-tooltip="IOS视频采集以及预览" aria-label="PREVIOUS: IOS视频采集以及预览">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/alienchang.github.io\/post\/%E6%92%AD%E6%94%BE%E5%99%A8\/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE\/';
+        
+          this.page.identifier = '\/post\/%E6%92%AD%E6%94%BE%E5%99%A8\/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 刘畅. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/" data-tooltip="OpenCV识别人脸" aria-label="NEXT: OpenCV识别人脸">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/" data-tooltip="IOS视频采集以及预览" aria-label="PREVIOUS: IOS视频采集以及预览">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">刘畅</h4>
+    
+      <div id="about-card-bio">记录生活学习</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        iOS资深开发工程师
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        中国
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://alienchang.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://alienchang.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+</html>
+

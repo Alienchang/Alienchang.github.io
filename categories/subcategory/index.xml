@@ -6,7 +6,86 @@
     <description>Recent content in subcategory on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 20 Oct 2022 14:14:19 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/subcategory/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Feb 2023 10:05:02 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/subcategory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenCV识别人脸</title>
+      <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/</link>
+      <pubDate>Tue, 28 Feb 2023 10:05:02 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>IOS视频循环播放</title>
+      <link>https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/</link>
+      <pubDate>Sat, 17 Dec 2022 17:18:48 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/</guid>
+      <description>&lt;h2 id=&#34;一avplayer监听播放结束实现循环播放&#34;&gt;一、AVPlayer监听播放结束，实现循环播放&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;添加播放器播放结束监听&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+&lt;/code&gt;&lt;/pre&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;在结束访法中seek视频到开始时间点&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;二avplayerlooper循环播放&#34;&gt;二、AVPlayerLooper循环播放&lt;/h2&gt;
+&lt;p&gt;原生方法，可完全替代方法一&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;三mpmovieplayercontroller实现循环播放&#34;&gt;三、MPMoviePlayerController实现循环播放&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&amp;#34;new&amp;#34; ofType:@&amp;#34;mp4&amp;#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;四ijkplayer循环播放&#34;&gt;四、ijkplayer循环播放&lt;/h2&gt;
+&lt;p&gt;使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。&lt;/p&gt;
+&lt;p&gt;先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;使用方法&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
     <item>
       <title>IOS视频采集以及预览</title>
       <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/</link>

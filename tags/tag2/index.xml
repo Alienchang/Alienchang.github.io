@@ -6,7 +6,16 @@
     <description>Recent content in tag2 on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 24 Dec 2018 15:19:37 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Feb 2023 10:05:02 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OpenCV识别人脸</title>
+      <link>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/</link>
+      <pubDate>Tue, 28 Feb 2023 10:05:02 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Sirikit Shortcuts</title>
       <link>https://alienchang.github.io/post/sirikit-shortcuts/</link>

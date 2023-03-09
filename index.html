@@ -211,6 +211,191 @@
     <div class="postShorten-header">
       <h1 class="postShorten-title">
       
+        <a class="link-unstyled" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/" aria-label="Open the post: OpenCV识别人脸">
+      
+          OpenCV识别人脸
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-02-28T10:05:02&#43;08:00">
+        
+  February 28, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt">
+      
+        
+      
+      <p>
+        
+          <a href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/opencv%E8%AF%86%E5%88%AB%E4%BA%BA%E8%84%B8/" class="postShorten-excerpt_link link" aria-label="Open the post: OpenCV识别人脸">Continue reading</a>
+        
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title">
+      
+        <a class="link-unstyled" href="https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/" aria-label="Open the post: IOS视频循环播放">
+      
+          IOS视频循环播放
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2022-12-17T17:18:48&#43;08:00">
+        
+  December 17, 2022
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt">
+      
+        <h2 id="一avplayer监听播放结束实现循环播放">一、AVPlayer监听播放结束，实现循环播放</h2>
+<ol>
+<li>添加播放器播放结束监听</li>
+</ol>
+<pre tabindex="0"><code>[[NSNotificationCenter defaultCenter] addObserver:self
+                                         selector:@selector(playerItemDidPlayToEndTime:)
+                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                           object:nil];
+</code></pre><ol start="2">
+<li>在结束访法中seek视频到开始时间点</li>
+</ol>
+<pre tabindex="0"><code>- (void)playerItemDidPlayToEndTime:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero]
+}
+</code></pre><h2 id="二avplayerlooper循环播放">二、AVPlayerLooper循环播放</h2>
+<p>原生方法，可完全替代方法一</p>
+<pre tabindex="0"><code>NSURL *url = nil;
+AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+AVQueuePlayer *player = [AVQueuePlayer queuePlayerWithItems:@[playerItem]];
+AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+AVPlayerLooper *playerLooper = [AVPlayerLooper playerLooperWithPlayer:player templateItem:playerItem];
+[player play];
+</code></pre><h2 id="三mpmovieplayercontroller实现循环播放">三、MPMoviePlayerController实现循环播放</h2>
+<pre tabindex="0"><code>self.url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@&#34;new&#34; ofType:@&#34;mp4&#34;]];
+self.player = [[MPMoviePlayerController alloc] initWithContentURL:self.url];
+[self.view addSubview:self.player.view];
+self.player.shouldAutoplay = YES;
+self.player.repeatMode = MPMovieRepeatModeOne;
+[self.player.view setFrame:self.view.bounds];
+self.player.scalingMode = MPMovieScalingModeAspectFill;
+[self.player play];
+</code></pre><h2 id="四ijkplayer循环播放">四、ijkplayer循环播放</h2>
+<p>使用ijkPlayerDemo中的IJKFFMoviePlayerController做测试，IJKFFMoviePlayerController本身没有循环播放代码，需要手动添加一下。</p>
+<p>先在IJKFFMoviePlayerController中添加loop属性，为bool类型，然后在.m文件421行添加相关代码 ijkmp_set_loop</p>
+<pre tabindex="0"><code>- (void)play
+{
+    if (!_mediaPlayer)
+        return;
+
+    [self setScreenOn:_keepScreenOnWhilePlaying];
+
+    [self startHudTimer];
+    if (self.loop) {
+        ijkmp_set_loop(_mediaPlayer, INT_MAX);
+    } else {
+        ijkmp_set_loop(_mediaPlayer, 1);
+    }
+    
+    ijkmp_start(_mediaPlayer);
+}
+</code></pre><p>使用方法</p>
+<pre tabindex="0"><code>self.videoPlayer = [[IJKFFMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:path] withOptions:options];
+self.videoPlayer.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+self.videoPlayer.view.frame = self.view.bounds;
+self.videoPlayer.loop = YES;
+self.videoPlayer.scalingMode = IJKMPMovieScalingModeAspectFill;
+self.videoPlayer.shouldAutoplay = YES;
+//        self.containView.autoresizesSubviews = YES;
+[self.view addSubview:self.videoPlayer.view];
+[self.videoPlayer prepareToPlay];
+[self.videoPlayer play];
+</code></pre>
+      
+      <p>
+        
+          <a href="https://alienchang.github.io/post/%E6%92%AD%E6%94%BE%E5%99%A8/ios%E8%A7%86%E9%A2%91%E5%BE%AA%E7%8E%AF%E6%92%AD%E6%94%BE/" class="postShorten-excerpt_link link" aria-label="Open the post: IOS视频循环播放">Continue reading</a>
+        
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title">
+      
         <a class="link-unstyled" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/" aria-label="Open the post: IOS视频采集以及预览">
       
           IOS视频采集以及预览
@@ -627,128 +812,6 @@
 </article>
 
           
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title">
-      
-        <a class="link-unstyled" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/performselector%E8%AD%A6%E5%91%8A%E6%9B%BF%E6%8D%A2%E6%96%B9%E6%B3%95/" aria-label="Open the post: performSelector may cause a leak because its selector is unknown">
-      
-          performSelector may cause a leak because its selector is unknown
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time datetime="2022-03-04T18:37:02&#43;08:00">
-        
-  March 4, 2022
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/ios">iOS</a>, 
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/ios%e9%97%ae%e9%a2%98">iOS问题</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt">
-      
-        
-      
-      <p>
-        
-          <a href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/performselector%E8%AD%A6%E5%91%8A%E6%9B%BF%E6%8D%A2%E6%96%B9%E6%B3%95/" class="postShorten-excerpt_link link" aria-label="Open the post: performSelector may cause a leak because its selector is unknown">Continue reading</a>
-        
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title">
-      
-        <a class="link-unstyled" href="https://alienchang.github.io/post/%E7%8E%A9/%E5%A5%BD%E7%8E%A9%E7%BD%91%E7%AB%99/" aria-label="Open the post: 好玩网站">
-      
-          好玩网站
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time datetime="2022-02-15T13:20:12&#43;08:00">
-        
-  February 15, 2022
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/%e7%8e%a9">玩</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt">
-      
-        
-      
-      <p>
-        
-          <a href="https://alienchang.github.io/post/%E7%8E%A9/%E5%A5%BD%E7%8E%A9%E7%BD%91%E7%AB%99/" class="postShorten-excerpt_link link" aria-label="Open the post: 好玩网站">Continue reading</a>
-        
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
           
   <div class="pagination-bar">
     <ul class="pagination">
@@ -771,7 +834,7 @@
         </section>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2022 刘畅. All Rights Reserved
+    &copy; 2023 刘畅. All Rights Reserved
   </span>
 </footer>
 

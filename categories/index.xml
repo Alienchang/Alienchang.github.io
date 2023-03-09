@@ -6,7 +6,16 @@
     <description>Recent content in Categories on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 28 Feb 2023 10:05:02 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Mar 2023 10:35:07 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>iOS</title>
+      <link>https://alienchang.github.io/categories/ios/</link>
+      <pubDate>Thu, 09 Mar 2023 10:35:07 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/categories/ios/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>category</title>
       <link>https://alienchang.github.io/categories/category/</link>
@@ -22,15 +31,6 @@
       <pubDate>Tue, 28 Feb 2023 10:05:02 +0800</pubDate>
       
       <guid>https://alienchang.github.io/categories/subcategory/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>iOS</title>
-      <link>https://alienchang.github.io/categories/ios/</link>
-      <pubDate>Fri, 08 Apr 2022 14:20:49 +0800</pubDate>
-      
-      <guid>https://alienchang.github.io/categories/ios/</guid>
       <description></description>
     </item>
     

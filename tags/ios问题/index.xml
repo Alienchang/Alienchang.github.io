@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>iOS问题 on Alienchang blog</title>
+    <link>https://alienchang.github.io/tags/ios%E9%97%AE%E9%A2%98/</link>
+    <description>Recent content in iOS问题 on Alienchang blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 09 Mar 2023 10:35:07 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/tags/ios%E9%97%AE%E9%A2%98/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Command PhaseScriptExecution failed with a nonzero exit code ARCHS[@]: unbound variable</title>
+      <link>https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/cocoapods_unbound_variable/</link>
+      <pubDate>Thu, 09 Mar 2023 10:35:07 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/cocoapods_unbound_variable/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

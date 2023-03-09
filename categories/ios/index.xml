@@ -6,7 +6,16 @@
     <description>Recent content in iOS on Alienchang blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Apr 2022 14:20:49 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/ios/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Mar 2023 10:35:07 +0800</lastBuildDate><atom:link href="https://alienchang.github.io/categories/ios/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Command PhaseScriptExecution failed with a nonzero exit code ARCHS[@]: unbound variable</title>
+      <link>https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/cocoapods_unbound_variable/</link>
+      <pubDate>Thu, 09 Mar 2023 10:35:07 +0800</pubDate>
+      
+      <guid>https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/cocoapods_unbound_variable/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>NSError传参</title>
       <link>https://alienchang.github.io/post/nserror%E4%BC%A0%E5%8F%82/</link>

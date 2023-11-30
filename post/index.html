@@ -212,6 +212,338 @@
     <div class="postShorten-header">
       <h1 class="postShorten-title">
       
+        <a class="link-unstyled" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9/" aria-label="Open the post: IOS视频压缩">
+      
+          IOS视频压缩
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-11-30T17:02:02&#43;08:00">
+        
+  November 30, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt">
+      
+        <h4 id="一-首先说视频压缩的几个维度">一. 首先说视频压缩的几个维度</h4>
+<ol>
+<li>宽高</li>
+<li>码率</li>
+<li>帧率</li>
+<li>编码方式</li>
+<li>GOP</li>
+</ol>
+<h4 id="二-如果视频中有音轨同时也可以压缩音轨">二. 如果视频中有音轨，同时也可以压缩音轨</h4>
+<ol>
+<li>码率</li>
+<li>采样率
+但是对音轨体积的压缩相对于视频整体体积来说意义不大</li>
+</ol>
+<h4 id="三-参数讲解">三. 参数讲解</h4>
+<ol>
+<li>宽高：就是视频或者图像的宽高，一般单位用像素表示</li>
+<li>码率：单位时间（每秒）内传输数据长度</li>
+<li>帧率：单位时间（每秒）内播放的画面数量</li>
+<li>通常是h264、h265，x264，x265</li>
+<li>GOP：两个关键帧的距离，关键帧中间有多少个非关键帧
+一般情况下短视频或者直播使用264编码即可，因为现在带宽都够，数据量大一些可以接受，264相对264压缩率会更高，但是转码过程中功耗相对较大，可以权衡利弊。
+h和x的区别无非就是硬编码和软编码，硬编、解码就是使用硬件，一般是gpu去编码，厂家会自己去针对自己的gpu或者cpu去实现264和265的编码协议，所以硬编、解码一般功耗小，速度快。
+软编码、解码是软件厂商使用系统上层api去实现的265和264协议，所以一般无法做到效率很高，但是优势在于可以跨平台，无视硬件。</li>
+</ol>
+<p>目前游戏直播，斗鱼，全民这些都使用265编码，因为一般观看者和主播很多都使用pc，性能够，而且支持动态切换分辨率（宽高）</p>
+<p>手机端秀场直播一般采用264编码，视频尺寸大约在1000x2500这样，帧率在16-24之间，码率 200<em>8</em>1024，可以设置为动态码率，适应手机性能和网络波动。
+码率影响的东西比较多，比如画面压缩程度，非关键帧的压缩程度</p>
+<p>GOP：加入视频帧率是16帧，那么GOP一般设置为32，也就是两个关键帧就可以播放2s的视频，但同时也需要完全加载完两个关键帧才可以播放视频，如果是直播，那么用户和主播间的视频时差最小就是2s，这个根据业务尔定</p>
+<h4 id="四-代码实现">四. 代码实现</h4>
+<pre tabindex="0"><code>方法声明
++ (void)compressWithVideoURL:(NSURL *)videoURL          // 视频数据源路径
+                   outputURL:(NSURL *)outputURL         // 压缩后输出路径
+                         fps:(NSInteger)fps             // 帧率
+                     bitRate:(NSInteger)bitRate         // 码率
+              dimensionScale:(CGFloat)dimensionScale
+                  completion:(void(^)(BOOL success))completion;
+</code></pre><pre tabindex="0"><code>// 创建视频asset
+AVAsset *videoAsset = [AVAsset assetWithURL:videoURL];
+NSError *readerError;
+// asset读取器
+AVAssetReader *reader = [AVAssetReader assetReaderWithAsset:videoAsset error:&amp;readerError];
+NSError *writerError;
+// asset写入器
+AVAssetWriter *writer = [AVAssetWriter assetWriterWithURL:outputURL fileType:AVFileTypeMPEG4 error:&amp;writerError];
+</code></pre><pre tabindex="0"><code>// 获取视频轨道
+AVAssetTrack *videoTrack = [videoAsset tracksWithMediaType:AVMediaTypeVideo].firstObject;
+AVAssetWriterInput *videoInput;
+AVAssetReaderOutput *videoOutput;
+    if (videoTrack) {
+        NSDictionary *videoOutputSetting = @{
+              (__bridge NSString *)kCVPixelBufferPixelFormatTypeKey:[NSNumber numberWithUnsignedInt:kCVPixelFormatType_422YpCbCr8]
+            };
+            
+        videoOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack:videoTrack outputSettings:videoOutputSetting];
+        
+        NSDictionary *videoCompressProperties = @{
+            AVVideoAverageBitRateKey : @(bitRate),        // 码率
+            AVVideoExpectedSourceFrameRateKey : @(fps),   // 帧率
+            AVVideoProfileLevelKey : AVVideoProfileLevelH264HighAutoLevel
+        };
+        
+        CGSize videoSize = [self sizeWithVideoURL:videoURL];
+        CGFloat videoWidth = videoSize.width;
+        CGFloat videoHeight = videoSize.height;
+        NSDictionary *videoCompressSettings = @{
+            AVVideoCodecKey : AVVideoCodecTypeH264,
+            AVVideoWidthKey : @(videoWidth * dimensionScale),
+            AVVideoHeightKey :@(videoHeight * dimensionScale),
+            AVVideoCompressionPropertiesKey : videoCompressProperties,
+            AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill
+        };
+        
+        videoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoCompressSettings];
+        videoInput.transform = videoTrack.preferredTransform;
+        if ([reader canAddOutput:videoOutput]) {
+            [reader addOutput:videoOutput];
+        }
+        
+        if ([writer canAddInput:videoInput]) {
+            [writer addInput:videoInput];
+        }
+    }
+</code></pre><p>音频大致相同，省略。。。。</p>
+<p>代码地址 <a href="https://github.com/Alienchang/VideoCompresser">https://github.com/Alienchang/VideoCompresser</a></p>
+      
+      <p>
+        
+          <a href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9/" class="postShorten-excerpt_link link" aria-label="Open the post: IOS视频压缩">Continue reading</a>
+        
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title">
+      
+        <a class="link-unstyled" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%8A%A8%E6%80%81%E6%B8%90%E5%8F%98label%E5%AE%9E%E7%8E%B0/" aria-label="Open the post: IOS动态渐变Label实现">
+      
+          IOS动态渐变Label实现
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-08-18T15:05:33&#43;08:00">
+        
+  August 18, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/ios">iOS</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/ios%e5%9f%ba%e7%a1%80">iOS基础</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt">
+      
+        
+      
+      <p>
+        
+          <a href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%8A%A8%E6%80%81%E6%B8%90%E5%8F%98label%E5%AE%9E%E7%8E%B0/" class="postShorten-excerpt_link link" aria-label="Open the post: IOS动态渐变Label实现">Continue reading</a>
+        
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title">
+      
+        <a class="link-unstyled" href="https://alienchang.github.io/post/ff/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8/" aria-label="Open the post: Ffprobe的使用">
+      
+          Ffprobe的使用
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-06-20T14:58:25&#43;08:00">
+        
+  June 20, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt">
+      
+        
+      
+      <p>
+        
+          <a href="https://alienchang.github.io/post/ff/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8/" class="postShorten-excerpt_link link" aria-label="Open the post: Ffprobe的使用">Continue reading</a>
+        
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title">
+      
+        <a class="link-unstyled" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E5%88%86%E5%B1%82/" aria-label="Open the post: 图像分层">
+      
+          图像分层
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-05-05T17:33:55&#43;08:00">
+        
+  May 5, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt">
+      
+        
+      
+      <p>
+        
+          <a href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E5%88%86%E5%B1%82/" class="postShorten-excerpt_link link" aria-label="Open the post: 图像分层">Continue reading</a>
+        
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title">
+      
         <a class="link-unstyled" href="https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/cocoapods_unbound_variable/" aria-label="Open the post: Command PhaseScriptExecution failed with a nonzero exit code ARCHS[@]: unbound variable">
       
           Command PhaseScriptExecution failed with a nonzero exit code ARCHS[@]: unbound variable
@@ -439,380 +771,6 @@ self.videoPlayer.shouldAutoplay = YES;
 </article>
 
           
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title">
-      
-        <a class="link-unstyled" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/" aria-label="Open the post: IOS视频采集以及预览">
-      
-          IOS视频采集以及预览
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time datetime="2022-10-20T14:14:19&#43;08:00">
-        
-  October 20, 2022
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt">
-      
-        <h2 id="一视频采集流程">一、视频采集流程</h2>
-<pre><code>1. 初始化采集会话 
-2. 设置采集设备
-3. 设置视频采集输入对象
-4. 设置视频采集输出对象及参数
-5. 开始采集
-6. 采集回调数据处理
-</code></pre>
-<h3 id="初始化采集会话">初始化采集会话</h3>
-<pre tabindex="0"><code>- (void)setupCaptureSession {
-    self.captureSession = [AVCaptureSession new];
-    [self.captureSession beginConfiguration];
-    if ([self.captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
-        [self.captureSession setSessionPreset:AVCaptureSessionPreset1280x720];
-    }
-    [self.captureSession commitConfiguration];
-}
-</code></pre><h3 id="设置采集设备">设置采集设备</h3>
-<pre tabindex="0"><code>- (void)setupDevice {
-    // 这里我们获取前置摄像头
-    self.device = [self captureDeviceWithPosition:(AVCaptureDevicePositionFront)];
-    // 一般直播16-18，电影24
-    [self setFPS:16];
-}
-</code></pre><pre tabindex="0"><code>/// 获取采集设备
-- (AVCaptureDevice *)captureDeviceWithPosition:(AVCaptureDevicePosition)position {
-    AVCaptureDevice *deviceRet = nil;
-    if (position != AVCaptureDevicePositionUnspecified) {
-        NSArray&lt;AVCaptureDeviceType&gt; *deviceTypes = @[AVCaptureDeviceTypeBuiltInWideAngleCamera,    // 广角镜头
-                                                      AVCaptureDeviceTypeBuiltInDualCamera];        // 正常情况下是主摄
-        
-        AVCaptureDeviceDiscoverySession *sessionDiscovery = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:deviceTypes mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
-        
-        NSArray&lt;AVCaptureDevice *&gt; *devices = sessionDiscovery.devices;//当前可用的AVCaptureDevice集合
-        for (AVCaptureDevice *device in devices) {
-            if ([device position] == position) {
-                deviceRet = device;
-            }
-        }
-    }
-    return deviceRet;
-}
-</code></pre><pre tabindex="0"><code>// 这是设备输出的fps
-- (void)setFPS:(NSInteger)fps {
-    if (fps &gt; 0) {
-        AVFrameRateRange *frameRateRange = self.device.activeFormat.videoSupportedFrameRateRanges.firstObject;
-        if(!frameRateRange) {
-            // 无法获取摄像头
-            return;
-        }
-
-        if (fps &gt;= frameRateRange.maxFrameRate) {
-            fps = frameRateRange.maxFrameRate;
-        } else if (fps &lt;= frameRateRange.minFrameRate) {
-            fps = frameRateRange.minFrameRate;
-        }
-
-        CMTime frameDuration = CMTimeMake(1 , (int)fps);
-        [self.captureSession beginConfiguration];
-        NSError *error = nil;
-        if ([self.device lockForConfiguration:&amp;error]) {
-            self.device.activeVideoMaxFrameDuration = frameDuration;
-            self.device.activeVideoMinFrameDuration = frameDuration;
-            [self.device unlockForConfiguration];
-        } else {
-            // 设置失败
-        }
-        [self.captureSession commitConfiguration];
-    }
-}
-</code></pre><h3 id="设置视频采集输入对象">设置视频采集输入对象</h3>
-<pre tabindex="0"><code>- (void)setupInput {
-    NSError *error = nil;
-    self.deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&amp;error];
-    [self.captureSession beginConfiguration];
-    if ([self.captureSession canAddInput:self.deviceInput]) {
-        [self.captureSession addInput:self.deviceInput];
-    }
-    [self.captureSession commitConfiguration];
-}
-</code></pre><h3 id="设置视频采集输出对象及参数">设置视频采集输出对象及参数</h3>
-<pre tabindex="0"><code>- (void)setupOutput {
-    self.deviceOutput = [AVCaptureVideoDataOutput new];
-    // 输出下一帧时是否丢弃上一帧
-    self.deviceOutput.alwaysDiscardsLateVideoFrames = YES;
-    // 输出视频色彩空间为yuv420（也可以为RGB）
-    self.deviceOutput.videoSettings = @{
-        (id)kCVPixelBufferPixelFormatTypeKey : [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
-    };
-    // 设置视频数据输出回调
-    [self.deviceOutput setSampleBufferDelegate:self queue:self.bufferQueue];
-    self.captureConnection = [self.deviceOutput connectionWithMediaType:AVMediaTypeVideo];
-    
-    // 设置输出图像方向
-    if ([self.captureConnection isVideoOrientationSupported]) {
-        [self.captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-    }
-    
-    // 设置是否镜像
-    if ([self.captureConnection isVideoMirroringSupported]) {
-        [self.captureConnection setVideoMirrored:YES];
-    }
-    
-    [self.captureSession beginConfiguration];
-    if ([self.captureSession canAddOutput:self.deviceOutput]) {
-        [self.captureSession addOutput:self.deviceOutput];
-    }
-    [self.captureSession commitConfiguration];
-}
-</code></pre><h3 id="开始采集">开始采集</h3>
-<pre tabindex="0"><code>- (void)startCatpure {
-    if (!(self.device &amp;&amp; self.deviceInput &amp;&amp; self.deviceOutput)) {
-        return;
-    }
-    
-    if (self.captureSession &amp;&amp; ![self.captureSession isRunning]) {
-        [self.captureSession startRunning];
-    }
-}
-</code></pre><h3 id="采集回调数据处理">采集回调数据处理</h3>
-<pre tabindex="0"><code>#pragma mark -- AVCaptureVideoDataOutputSampleBufferDelegate
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-    //获取每一帧图像信息
-    CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
-    NSLog(@&#34;%@&#34;,pixelBuffer);
-}
-</code></pre><p>本文demo： <a href="https://github.com/Alienchang/TestiOSCapture">https://github.com/Alienchang/TestiOSCapture</a></p>
-      
-      <p>
-        
-          <a href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86%E4%BB%A5%E5%8F%8A%E9%A2%84%E8%A7%88/" class="postShorten-excerpt_link link" aria-label="Open the post: IOS视频采集以及预览">Continue reading</a>
-        
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title">
-      
-        <a class="link-unstyled" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/" aria-label="Open the post: 图像色彩格式">
-      
-          图像色彩格式
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time datetime="2022-10-13T15:18:48&#43;08:00">
-        
-  October 13, 2022
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt">
-      
-        
-      
-      <p>
-        
-          <a href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E8%89%B2%E5%BD%A9%E6%A0%BC%E5%BC%8F/" class="postShorten-excerpt_link link" aria-label="Open the post: 图像色彩格式">Continue reading</a>
-        
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title">
-      
-        <a class="link-unstyled" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/" aria-label="Open the post: 图像磨皮原理">
-      
-          图像磨皮原理
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time datetime="2022-10-13T15:02:31&#43;08:00">
-        
-  October 13, 2022
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt">
-      
-        
-      
-      <p>
-        
-          <a href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E7%A3%A8%E7%9A%AE%E5%8E%9F%E7%90%86/" class="postShorten-excerpt_link link" aria-label="Open the post: 图像磨皮原理">Continue reading</a>
-        
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title">
-      
-        <a class="link-unstyled" href="https://alienchang.github.io/post/nserror%E4%BC%A0%E5%8F%82/" aria-label="Open the post: NSError传参">
-      
-          NSError传参
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time datetime="2022-04-08T14:20:49&#43;08:00">
-        
-  April 8, 2022
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/ios">iOS</a>, 
-    
-      <a class="category-link" href="https://alienchang.github.io/categories/ios%e5%9f%ba%e7%a1%80">iOS基础</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt">
-      
-        
-      
-      <p>
-        
-          <a href="https://alienchang.github.io/post/nserror%E4%BC%A0%E5%8F%82/" class="postShorten-excerpt_link link" aria-label="Open the post: NSError传参">Continue reading</a>
-        
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
           
   <div class="pagination-bar">
     <ul class="pagination">
@@ -827,7 +785,7 @@ self.videoPlayer.shouldAutoplay = YES;
           </li>
         
       
-      <li class="pagination-number">page 1 of 4</li>
+      <li class="pagination-number">page 1 of 5</li>
     </ul>
   </div>
 

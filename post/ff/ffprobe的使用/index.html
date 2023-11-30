@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <script type="application/ld+json">
+
+{  
+  "@context":"http://schema.org",
+  "@type":"Website",
+  "@id":"https:\/\/alienchang.github.io\/",
+  "author": {
+    "@type": "Person",
+    "name": "刘畅",
+    
+    "image": "https://avatars.githubusercontent.com/u/6712684?s=400\u0026u=458bf25808c3a6021d4e381215516bef1a0fa53f\u0026v=4"
+    
+  },
+  "name":"Alienchang blog",
+  "description":"",
+  "url":"https:\/\/alienchang.github.io\/post\/ff\/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8\/",
+  "keywords":"[tech]"
+}
+
+</script>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.103.1 with theme Tranquilpeak 0.5.3-BETA">
+<meta name="author" content="刘畅">
+<meta name="keywords" content="tech">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ffprobe的使用">
+<meta name="twitter:title" content="Ffprobe的使用">
+<meta property="og:url" content="https://alienchang.github.io/post/ff/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8/">
+<meta property="twitter:url" content="https://alienchang.github.io/post/ff/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8/">
+<meta property="og:site_name" content="Alienchang blog">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2023-06-20T14:58:25">
+  
+  
+    <meta property="article:modified_time" content="2023-06-20T14:58:25">
+  
+  
+  
+    
+      <meta property="article:section" content="category">
+    
+      <meta property="article:section" content="subcategory">
+    
+  
+  
+    
+      <meta property="article:tag" content="tag1">
+    
+      <meta property="article:tag" content="tag2">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/6712684?s=400&u=458bf25808c3a6021d4e381215516bef1a0fa53f&v=4">
+  <meta property="twitter:image" content="https://avatars.githubusercontent.com/u/6712684?s=400&u=458bf25808c3a6021d4e381215516bef1a0fa53f&v=4">
+
+
+
+
+
+
+    <title>Ffprobe的使用</title>
+
+    <link rel="icon" href="https://alienchang.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://alienchang.github.io/post/ff/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    
+    
+    <link rel="stylesheet" href="https://alienchang.github.io/css/style-h6ccsoet3mzkbb0wngshlfbaweimexgqcxj0h5hu4h82olsdzz6wmqdkajm.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://alienchang.github.io/" aria-label="Go to homepage">Alienchang blog</a>
+  </div>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://alienchang.github.io/#about" aria-label="Read more about the author">
+          <img class="sidebar-profile-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">刘畅</h4>
+        
+          <h5 class="sidebar-profile-bio">记录生活学习</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/" title="Home">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-home" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/categories" title="Categories">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-bookmark" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/tags" title="Tags">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-tags" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/archives" title="Archives">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-archive" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://alienchang.github.io/#about" title="About">
+    
+      <i class="sidebar-button-icon fas fa-lg fa-question" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Alienchang" target="_blank" rel="noopener" title="GitHub">
+    
+      <i class="sidebar-button-icon fab fa-lg fa-github" aria-hidden="true"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" id="top">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title">
+      Ffprobe的使用
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time datetime="2023-06-20T14:58:25&#43;08:00">
+        
+  June 20, 2023
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
+    
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown">
+            <div class="main-content-wrap">
+              <h4 id="图看不到的话翻墙">图看不到的话翻墙</h4>
+<h3 id="一ffprobe-下载配置"><strong>一、ffprobe 下载、配置</strong></h3>
+<p><a href="https://ffmpeg.org/download.html">https://ffmpeg.org/download.html</a>
+选择需要的平台，这里我选择的是Mac，然后点击 Static builds for macOS，点进去之后可以选择下载ffmpeg、ffprobe、ffplay、ffserver。
+<img src="https://github.com/Alienchang/BlogImages/blob/main/Other/WeChatd3a5c9853f1495cd15a531e852acda84.png?raw=true" alt=""></p>
+<p>下载后解压到自己喜欢的路径。
+然后根目录下打开bash文件</p>
+<pre tabindex="0"><code>open .bash_profile
+</code></pre><p>添加</p>
+<pre tabindex="0"><code>alias ffprobe=&#39;/Users/zz/Desktop/workspace/bin/ffprobe&#39;
+</code></pre><h3 id="二使用"><strong>二、使用</strong></h3>
+<h4 id="1-查看视频信息">1. 查看视频信息</h4>
+<pre tabindex="0"><code>ffprobe /Users/zz/Downloads/IMG_7838.MP4
+</code></pre><p>打出以下信息</p>
+<pre tabindex="0"><code>Input #0, mov,mp4,m4a,3gp,3g2,mj2, from &#39;/Users/zz/Downloads/IMG_7838.MP4&#39;:
+  Metadata:
+    major_brand     : mp42
+    minor_version   : 1
+    compatible_brands: isommp41mp42
+    creation_time   : 2022-10-25T00:52:27.000000Z
+  Duration: 00:02:55.94, start: 0.000000, bitrate: 2503 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 2443 kb/s, SAR 1:1 DAR 16:9, 25 fps, 30 tbr, 600 tbn (default)
+    Metadata:
+      creation_time   : 2022-10-25T00:52:27.000000Z
+      handler_name    : Core Media Video
+      vendor_id       : [0][0][0][0]
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 55 kb/s (default)
+    Metadata:
+      creation_time   : 2022-10-25T00:52:27.000000Z
+      handler_name    : Core Media Audio
+      vendor_id       : [0][0][0][0]
+</code></pre><p>duration:视频时常
+Stream #0:0：第一轨道，这里是视频轨道，一般也就一个视频轨道，音频轨道可能有多个，
+视频是h264编码，图像储存格式是yuv420p，码率2443kb/3m，30帧</p>
+<h4 id="2-查看视频轨道详细信息">2. 查看视频轨道详细信息</h4>
+<pre tabindex="0"><code> ffprobe -v trace /Users/zz/Downloads/IMG_7838.MP4 
+</code></pre><p>打印出的信息很多，包括头信息、sample信息（264对视频帧的封装），每一帧的偏移量、大小、是否是关键帧。
+这调命令通常用于查看mp4的moov位置，以判断是否可以快速播放。
+以下是打印的头信息部分：</p>
+<p><img src="https://github.com/Alienchang/BlogImages/blob/main/Other/WeChatb6dbf17642e6853c5b0adecc28882b51.png?raw=true" alt=""></p>
+<pre tabindex="0"><code>[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7feac9f04a00] type:&#39;mdat&#39; parent:&#39;root&#39; sz: 54963965 44 55052478
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7feac9f04a00] type:&#39;moov&#39; parent:&#39;root&#39; sz: 88477 54964009 55052478
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7feac9f04a00] type:&#39;mvhd&#39; parent:&#39;moov&#39; sz: 108 8 88469
+</code></pre><p>moov即mp4的头
+mdat是mp4的图像信息数据
+mvhd是moov的子box</p>
+<p>sz: 54963965 44 55052478 含义：
+第一个是当前box所占的大小
+第二个是起始偏移量
+第三个是父box的大小</p>
+<p>从上面能看出mdat的起始偏移量要大于moov的起始偏移量，所以这个视频不是一个能快速播放的视频</p>
+<h3 id="3查看视频帧详细信息">3.查看视频帧详细信息</h3>
+<pre tabindex="0"><code>ffprobe -show_frames
+</code></pre><p>输出</p>
+<pre tabindex="0"><code>[FRAME]
+media_type=video
+stream_index=0
+key_frame=0                                                // 是否是关键帧
+pts=105460                                                  // pts时间戳
+pts_time=175.766667                                   // 帧播放的时间
+pkt_dts=105440
+pkt_dts_time=175.733333                            // 解码时间
+best_effort_timestamp=105460
+best_effort_timestamp_time=175.766667
+pkt_duration=20                                           
+pkt_duration_time=0.033333                        // 0.033秒，可以看出视频是30帧
+duration=20
+duration_time=0.033333
+pkt_pos=54963601                                      // 帧的起始偏移量
+pkt_size=80                                                // 帧大小
+width=1280
+height=720
+pix_fmt=yuv420p                                        // 色彩格式，解码和播放用
+sample_aspect_ratio=1:1
+pict_type=P                                                // I、B、P帧，这里是P帧
+coded_picture_number=4394                        
+display_picture_number=0
+interlaced_frame=0
+top_field_first=0
+repeat_pict=0
+color_range=tv
+color_space=bt709
+color_primaries=bt709
+color_transfer=bt709
+chroma_location=left
+[/FRAME]
+</code></pre><p>以上是其中一帧的描述</p>
+              
+
+
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/tag1/">tag1</a>
+
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/tag2/">tag2</a>
+
+                  </div>
+                
+              
+            
+            
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%8A%A8%E6%80%81%E6%B8%90%E5%8F%98label%E5%AE%9E%E7%8E%B0/" data-tooltip="IOS动态渐变Label实现" aria-label="NEXT: IOS动态渐变Label实现">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E5%88%86%E5%B1%82/" data-tooltip="图像分层" aria-label="PREVIOUS: 图像分层">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+            
+  
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'https:\/\/alienchang.github.io\/post\/ff\/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8\/';
+        
+          this.page.identifier = '\/post\/ff\/ffprobe%E7%9A%84%E4%BD%BF%E7%94%A8\/'
+        
+      };
+      (function() {
+        
+        
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+          document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+          return;
+        }
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        var disqus_shortname = 'hugo-tranquilpeak-theme';
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  
+
+
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2023 刘畅. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        
+<div class="post-actions-wrap">
+  <nav >
+    <ul class="post-actions post-action-nav">
+      
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%8A%A8%E6%80%81%E6%B8%90%E5%8F%98label%E5%AE%9E%E7%8E%B0/" data-tooltip="IOS动态渐变Label实现" aria-label="NEXT: IOS动态渐变Label实现">
+          
+              <i class="fa fa-angle-left"></i>
+              <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+            </a>
+        </li>
+        <li class="post-action">
+          
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/%E5%9B%BE%E5%83%8F%E5%88%86%E5%B1%82/" data-tooltip="图像分层" aria-label="PREVIOUS: 图像分层">
+          
+              <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+        </li>
+      
+    </ul>
+  </nav>
+<ul class="post-actions post-action-share" >
+  
+    <li class="post-action hide-lg hide-md hide-sm">
+      <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+        <i class="fa fa-share-alt" aria-hidden="true"></i>
+      </a>
+    </li>
+    
+  
+  
+    <li class="post-action">
+      <a class="post-action-btn btn btn--default" href="#disqus_thread" aria-label="Leave a comment">
+        <i class="far fa-comment"></i>
+      </a>
+    </li>
+  
+  <li class="post-action">
+    
+      <a class="post-action-btn btn btn--default" href="#top" aria-label="Back to top">
+      <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    
+    </a>
+  </li>
+</ul>
+</div>
+
+
+      </div>
+      
+
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-times"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://avatars.githubusercontent.com/u/6712684?s=400&amp;u=458bf25808c3a6021d4e381215516bef1a0fa53f&amp;v=4" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">刘畅</h4>
+    
+      <div id="about-card-bio">记录生活学习</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        iOS资深开发工程师
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker-alt"></i>
+        <br/>
+        中国
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://alienchang.github.io/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js" integrity="sha512-z+/WWfyD5tccCukM4VvONpEtLmbAm5LDu7eKiyMQJ9m7OfPEDL7gENyDRL3Yfe8XAuGsS2fS4xSMnl6d30kqGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script src="https://alienchang.github.io/js/script-yqzy9wdlzix4lbbwdnzvwx3egsne77earqmn73v9uno8aupuph8wfguccut.min.js"></script>
+
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-gE8KAQyFIzV1C9+GZ8TKJHZS2s+n7EjNtC+IMRn1l5+WYJTHOODUM6JSjZhFhqXmc7bG8Av6XXpckA4tYhflnw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/apache.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-EWROca+bote+7Oaaar1F6y74iZj1r1F9rm/ly7o+/FwJopbBaWtsFDmaKoZDd3QiGU2pGacBirHJNivmGLYrow==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/go.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-GDVzAn0wpx1yVtQsRWmFc6PhJiLBPdUic+h4GWgljBh904O3JU10fk9EKNpVyIoPqkFn54rgL2QBG4BmUTMpiQ==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/http.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-UgZlma8NzkrDb/NWgmLIcTrH7i/CSnLLDRFqCSNF5NGPpjKmzyM25qcoXGOup8+cDakKyaiTDd7N4dyH4YT+IA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/less.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-lot9koe73sfXIrUvIPM/UEhuMciN56RPyBdOyZgfO53P2lkWyyXN7J+njcxIIBRV+nVDQeiWtiXg+bLAJZDTfg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/nginx.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-Zd3e7XxHP00TD0Imr0PIfeM0fl0v95kMWuhyAS3Wn1UTSXTkz0OhtRgBAr4JlmADRgiXr4x7lpeUdqaGN8xIog==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/puppet.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-qtqDO052iXMSP+5d/aE/jMtL9vIIGvONgTJziC2K/ZIB1yEGa55WVxGE9/08rSQ62EoDifS9SWVGZ7ihSLhzMA==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/scss.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-1NmkjnEDnwwwcu28KoQF8vs3oaPFokQHbmbtwGhFfeDsQZtVFI8zW2aE9O8yMYdpdyKV/5blE4pSWw4Z/Sv97w==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/stylus.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-B2wSfruPjr8EJL6IIzQr1eAuDwrsfIfccNf/LCEdxELCgC/S/ZMt/Uvk80aD79m7IqOqW+Sw8nbkvha20yZpzg==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/swift.min.js"></script>
+  
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha512-28oDiQZGKUVN6wQ7PSLPNipOcmkCALXKwOi7bnkyFf8QiMZQxG9EQoy/iiNx6Zxj2cG2SbVa4dXKigQhu7GiFw==" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/languages/yaml.min.js"></script>
+  
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+
+
+    
+  </body>
+</html>
+

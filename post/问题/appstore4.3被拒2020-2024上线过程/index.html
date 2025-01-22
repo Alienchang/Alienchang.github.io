@@ -17,7 +17,7 @@
   },
   "name":"Alienchang blog",
   "description":"",
-  "url":"https:\/\/alienchang.github.io\/post\/ios%E5%9F%BA%E7%A1%80\/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd\/",
+  "url":"https:\/\/alienchang.github.io\/post\/%E9%97%AE%E9%A2%98\/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B\/",
   "keywords":"[tech]"
 }
 
@@ -33,32 +33,34 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS多线程GCD">
-<meta name="twitter:title" content="iOS多线程GCD">
-<meta property="og:url" content="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/">
-<meta property="twitter:url" content="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/">
+<meta property="og:title" content="AppStore4.3被拒，2020 2024上线过程">
+<meta name="twitter:title" content="AppStore4.3被拒，2020 2024上线过程">
+<meta property="og:url" content="https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B/">
+<meta property="twitter:url" content="https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B/">
 <meta property="og:site_name" content="Alienchang blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2022-02-13T23:43:47">
+    <meta property="article:published_time" content="2025-01-22T14:33:09">
   
   
-    <meta property="article:modified_time" content="2022-02-13T23:43:47">
+    <meta property="article:modified_time" content="2025-01-22T14:33:09">
   
-  
-  
-    
-      <meta property="article:section" content="iOS">
-    
-      <meta property="article:section" content="iOS基础">
-    
   
   
     
-      <meta property="article:tag" content="iOS">
+      <meta property="article:section" content="category">
+    
+      <meta property="article:section" content="subcategory">
+    
+  
+  
+    
+      <meta property="article:tag" content="tag1">
+    
+      <meta property="article:tag" content="tag2">
     
   
 
@@ -79,14 +81,14 @@
 
 
 
-    <title>iOS多线程GCD</title>
+    <title>AppStore4.3被拒，2020 2024上线过程</title>
 
     <link rel="icon" href="https://alienchang.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/">
+    <link rel="canonical" href="https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -214,15 +216,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title">
-      iOS多线程GCD
+      AppStore4.3被拒，2020 2024上线过程
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time datetime="2022-02-13T23:43:47&#43;08:00">
+      <time datetime="2025-01-22T14:33:09&#43;08:00">
         
-  February 13, 2022
+  January 22, 2025
 
       </time>
     
@@ -231,9 +233,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://alienchang.github.io/categories/ios">iOS</a>, 
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
     
-      <a class="category-link" href="https://alienchang.github.io/categories/ios%e5%9f%ba%e7%a1%80">iOS基础</a>
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
     
   
 
@@ -243,15 +245,35 @@
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <h2 id="gcd基本方法">GCD基本方法</h2>
-<ul>
-<li>dispatch_barrier_async</li>
-<li>dispatch_after</li>
-<li>dispatch_once</li>
-<li>dispatch_apply</li>
-<li>dispatch_group</li>
-<li>dispatch_semaphore</li>
-</ul>
+              <h3 id="一2022年被下架">一、2022年被下架</h3>
+<pre><code>理由是与某违规下架App功能和代码相似，但实际上与这无关，大概率是因为语音房等娱乐项目，AppStore此类产品较多，所以被下架。
+</code></pre>
+<h3 id="二2022年第一次尝试重新上架">二、2022年第一次尝试重新上架</h3>
+<pre><code>向苹果开发人员解释，我们并没有任何违规内容，并且不存在抄袭其他App，然后提交了新的app，但是被拒了。审核人员态度十分强硬，如果再这么提交就把号封禁。
+</code></pre>
+<h3 id="三2023年尝试换皮上架">三、2023年尝试换皮上架</h3>
+<pre><code>1. 功能做了大改版，弱化语音房功能，UI重新改版，与之前完全不同
+2. 代码混淆，使用多种三方工具，最后用了一款付费工具，价格在2000左右
+3. 提交后，居然又4.3被拒，理由与之前相识，说与违规下架app功能相似
+</code></pre>
+<h3 id="四2023年启动全新项目">四、2023年启动全新项目</h3>
+<pre><code>1. 语言使用swift（原代码为oc），调试设备、网络、打包机、账号进行隔离
+2. 使用工具类型App上架，主打壁纸功能，只有一个比较深层的直播间入口，而且直播间主打白噪音、不同场景背景音乐伴眠厅
+3. 添加工具类App常见付费功能，比如订阅、内购
+4. 提交后，顺利通过。但还是十分忐忑，因为毕竟是工具类App，未来迭代可能会有问题
+</code></pre>
+<h3 id="五2024年末-经过若干版本迭代再次被拒">五、2024年末 经过若干版本迭代再次被拒</h3>
+<pre><code>1. 在某次提交后，因市场图功能与App内有差异被拒
+2. 替换市场图后再次提交等消息
+4. 某日突然收到账号被封禁消息，理由是账号内App功能与实际分类不符（工具类，但是App内是娱乐项目）
+5. 经过与审核人员沟通，账号解封，但是要求删除当前App或者删除非工具内容的功能。或者新建一个分类为娱乐的App
+6. 经过与团队沟通，决定新建一个App，因为当前App内还有不少用户，所以决定保留当前App，删除非工具内容的功能，然后新建一个App。
+7. 新建App后，由于App是直播娱乐分类，所以需要各种备案，然后当前账号是个个人账号。又没给过，说要么升级成公司账号，要么转移当前产品到公司所属的账号下。然后本来想着升级这个账号来着，然后发现备案的公司名已经有账号了，我公司的，这个账号下已经有一个4.3的产品了。然后我们就在这个公司账号下又开了个app，并且重新申请各种资质，提心掉胆的提上去了，提交的时候把发生在工具app的事大概描述了下，就说是审核人员这么建议的。等待许久后，居然通过了。
+</code></pre>
+<h3 id="六中间的其他插曲">六、中间的其他插曲</h3>
+<pre><code>1. 因为更换App，所以bundleID需要更换，所以App所使用的大量三方SDK需要重新配置
+2. 因为最终上架的账号不是原来工具类App的账号，怕代码关联再4.3，需要完全删除之前工具类项目，并提交一个空项目上去
+</code></pre>
               
 
 
@@ -265,7 +287,9 @@
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/ios/">iOS</a>
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/tag1/">tag1</a>
+
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/tag2/">tag2</a>
 
                   </div>
                 
@@ -278,7 +302,7 @@
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/" data-tooltip="iOS多读单写" aria-label="NEXT: iOS多读单写">
+            <a class="post-action-btn btn btn--disabled">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -286,7 +310,7 @@
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/" data-tooltip="iOS多线程" aria-label="PREVIOUS: iOS多线程">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0/" data-tooltip="音视频流打开速度、延迟影响因素" aria-label="PREVIOUS: 音视频流打开速度、延迟影响因素">
           
               <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
               <i class="fa fa-angle-right"></i>
@@ -329,9 +353,9 @@
     </div>
     <script type="text/javascript">
       var disqus_config = function() {
-        this.page.url = 'https:\/\/alienchang.github.io\/post\/ios%E5%9F%BA%E7%A1%80\/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd\/';
+        this.page.url = 'https:\/\/alienchang.github.io\/post\/%E9%97%AE%E9%A2%98\/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B\/';
         
-          this.page.identifier = '\/post\/ios%E5%9F%BA%E7%A1%80\/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd\/'
+          this.page.identifier = '\/post\/%E9%97%AE%E9%A2%98\/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B\/'
         
       };
       (function() {
@@ -367,7 +391,7 @@
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/" data-tooltip="iOS多读单写" aria-label="NEXT: iOS多读单写">
+            <a class="post-action-btn btn btn--disabled">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -375,7 +399,7 @@
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/" data-tooltip="iOS多线程" aria-label="PREVIOUS: iOS多线程">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0/" data-tooltip="音视频流打开速度、延迟影响因素" aria-label="PREVIOUS: 音视频流打开速度、延迟影响因素">
           
               <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
               <i class="fa fa-angle-right"></i>

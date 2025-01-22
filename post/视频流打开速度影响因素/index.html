@@ -17,7 +17,7 @@
   },
   "name":"Alienchang blog",
   "description":"",
-  "url":"https:\/\/alienchang.github.io\/post\/ios%E5%9F%BA%E7%A1%80\/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd\/",
+  "url":"https:\/\/alienchang.github.io\/post\/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0\/",
   "keywords":"[tech]"
 }
 
@@ -33,32 +33,34 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS多线程GCD">
-<meta name="twitter:title" content="iOS多线程GCD">
-<meta property="og:url" content="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/">
-<meta property="twitter:url" content="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/">
+<meta property="og:title" content="音视频流打开速度、延迟影响因素">
+<meta name="twitter:title" content="音视频流打开速度、延迟影响因素">
+<meta property="og:url" content="https://alienchang.github.io/post/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0/">
+<meta property="twitter:url" content="https://alienchang.github.io/post/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0/">
 <meta property="og:site_name" content="Alienchang blog">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2022-02-13T23:43:47">
+    <meta property="article:published_time" content="2024-07-05T15:43:52">
   
   
-    <meta property="article:modified_time" content="2022-02-13T23:43:47">
+    <meta property="article:modified_time" content="2024-07-05T15:43:52">
   
-  
-  
-    
-      <meta property="article:section" content="iOS">
-    
-      <meta property="article:section" content="iOS基础">
-    
   
   
     
-      <meta property="article:tag" content="iOS">
+      <meta property="article:section" content="category">
+    
+      <meta property="article:section" content="subcategory">
+    
+  
+  
+    
+      <meta property="article:tag" content="tag1">
+    
+      <meta property="article:tag" content="tag2">
     
   
 
@@ -79,14 +81,14 @@
 
 
 
-    <title>iOS多线程GCD</title>
+    <title>音视频流打开速度、延迟影响因素</title>
 
     <link rel="icon" href="https://alienchang.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd/">
+    <link rel="canonical" href="https://alienchang.github.io/post/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -214,15 +216,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title">
-      iOS多线程GCD
+      音视频流打开速度、延迟影响因素
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time datetime="2022-02-13T23:43:47&#43;08:00">
+      <time datetime="2024-07-05T15:43:52&#43;08:00">
         
-  February 13, 2022
+  July 5, 2024
 
       </time>
     
@@ -231,9 +233,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://alienchang.github.io/categories/ios">iOS</a>, 
+      <a class="category-link" href="https://alienchang.github.io/categories/category">category</a>, 
     
-      <a class="category-link" href="https://alienchang.github.io/categories/ios%e5%9f%ba%e7%a1%80">iOS基础</a>
+      <a class="category-link" href="https://alienchang.github.io/categories/subcategory">subcategory</a>
     
   
 
@@ -243,15 +245,38 @@
           
           <div class="post-content markdown">
             <div class="main-content-wrap">
-              <h2 id="gcd基本方法">GCD基本方法</h2>
-<ul>
-<li>dispatch_barrier_async</li>
-<li>dispatch_after</li>
-<li>dispatch_once</li>
-<li>dispatch_apply</li>
-<li>dispatch_group</li>
-<li>dispatch_semaphore</li>
-</ul>
+              <h2 id="heading"></h2>
+<p>一.首先分析视频流从采集到用户拉取经过了哪些步骤
+1. 视频采集、编码
+2. 推流
+3. 视频转码
+4. 从CDN服务器拉流
+5. 解码
+6. 渲染</p>
+<h2 id="heading-1"></h2>
+<p>二.逐步分析
+1. 视频采集：
+(1) 通常情况下视频采集、编目速度很快，基本不会导致延迟，需要注意的是低端机型或者业务场景下设备长时间超负荷运作，导致设备过热降频。
+(2) 还有如果是低端机型，尽量设置采集低分辨率、低帧率，如果业务场景允许的话也可以设置高GOP。
+(3) 根据设置视频编码色彩排列格式yuv420、444、RGB等
+(4) 视频编码：如果服务端支持转码（转为x264、265），推荐客户端使用硬编码，可以有效的节省CPU资源
+2. 推流：
+(1) 推流端网络状况会直接影响用户拉流的延迟大小。
+(2) 如果是网络较差的区域，可以设置低码率（码率=分辨率x帧率x像素比特数），同时降低分辨率等
+3. 视频转码：
+(1) 视频转码通常由CDN服务器去完成。
+(2) 转码会根据业务需求去转码，可以修改视频的分辨率、帧率、码率。编码格式（264、265等）
+(3) 也可能根据需求去转成不同分辨率的多路视频
+(4) 转码的复杂程度根据业务而定，越复杂需要服务器的配置越高，否则会导致视频流积压或者丢帧卡顿等，从而造成拉流延迟
+4. 从CDN服务器拉流
+(1) 视频的最小可播放单元是一个GOP，也就是两个关键帧间的间隔。如果设置视频帧率是30帧，GOP设置为15，这个视频每30帧有3个关键帧，并且视频最小可播放时间是0.5s，也就是说，不考虑网络转码等因素下，播放这个视频流延迟最多为0.5s，但是考虑到GOP直接影响到视频的大小和清晰度，直播间的视频采集时一般会设置帧率为24左右，GOP设置为帧率的2倍，也就是48，所以理论上最大播放延迟为2s。
+(2) 如果CDN服务器不做任何处理，那么用户可能最长等待2s才能播放视频，也就是黑屏2s以后才开始播放视频。
+(3) 服务器缓存视频：为了解决上述（2）问题，服务器会根据成本选择缓存视频，缓存的大小是GOP倍数帧率的视频，这样每次用户拉流的时候都会直接拉取到一个完整的GOP数据，可以直接进行视频播放，但是这样可能会导致直播的延迟为一整个GOP，也就是2s。当然也可以根据一些策略去解决，比如播放过程中会快速播放完服务端缓存的视频，然后从新校准时间去播放最新的流。
+5. 解码：
+(1) 通常情况下解码不会造成很大延迟，如果低端机型没有做容错处理，可能会造成视频画面卡顿，音画不同步等问题。
+(2) 低端机型可以使用丢帧策略去解决问题（丢B帧），如果成本够，服务端可以支持多码率多分辨率视频，不同机型拉取不同的流去减少硬件压力。
+6. 渲染:
+(1) 渲染时间点处理：如果打开一个页面的时候再去进行拉流-渲染，以iOS程序为例，动画时间大概在0.25s，点击相应时间视机型不同，假设为0.01s，这样就会延迟0.26s才会播放视频。所以需要尽可能的提前拉流时间，比如点击视频即开始拉流，进入页面后如果拉取到一个GOP数据了，就可以马上播放视频</p>
               
 
 
@@ -265,7 +290,9 @@
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/ios/">iOS</a>
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/tag1/">tag1</a>
+
+  <a class="tag tag--primary tag--small" href="https://alienchang.github.io/tags/tag2/">tag2</a>
 
                   </div>
                 
@@ -278,7 +305,7 @@
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/" data-tooltip="iOS多读单写" aria-label="NEXT: iOS多读单写">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B/" data-tooltip="AppStore4.3被拒，2020 2024上线过程" aria-label="NEXT: AppStore4.3被拒，2020 2024上线过程">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -286,7 +313,7 @@
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/" data-tooltip="iOS多线程" aria-label="PREVIOUS: iOS多线程">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios-gif%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9/" data-tooltip="IOS Gif图片压缩" aria-label="PREVIOUS: IOS Gif图片压缩">
           
               <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
               <i class="fa fa-angle-right"></i>
@@ -329,9 +356,9 @@
     </div>
     <script type="text/javascript">
       var disqus_config = function() {
-        this.page.url = 'https:\/\/alienchang.github.io\/post\/ios%E5%9F%BA%E7%A1%80\/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd\/';
+        this.page.url = 'https:\/\/alienchang.github.io\/post\/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0\/';
         
-          this.page.identifier = '\/post\/ios%E5%9F%BA%E7%A1%80\/ios%E5%A4%9A%E7%BA%BF%E7%A8%8Bgcd\/'
+          this.page.identifier = '\/post\/%E8%A7%86%E9%A2%91%E6%B5%81%E6%89%93%E5%BC%80%E9%80%9F%E5%BA%A6%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0\/'
         
       };
       (function() {
@@ -367,7 +394,7 @@
       
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E8%AF%BB%E5%8D%95%E5%86%99/" data-tooltip="iOS多读单写" aria-label="NEXT: iOS多读单写">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E9%97%AE%E9%A2%98/appstore4.3%E8%A2%AB%E6%8B%922020-2024%E4%B8%8A%E7%BA%BF%E8%BF%87%E7%A8%8B/" data-tooltip="AppStore4.3被拒，2020 2024上线过程" aria-label="NEXT: AppStore4.3被拒，2020 2024上线过程">
           
               <i class="fa fa-angle-left"></i>
               <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -375,7 +402,7 @@
         </li>
         <li class="post-action">
           
-            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/ios%E5%9F%BA%E7%A1%80/ios%E5%A4%9A%E7%BA%BF%E7%A8%8B/" data-tooltip="iOS多线程" aria-label="PREVIOUS: iOS多线程">
+            <a class="post-action-btn btn btn--default tooltip--top" href="https://alienchang.github.io/post/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/ios-gif%E5%9B%BE%E7%89%87%E5%8E%8B%E7%BC%A9/" data-tooltip="IOS Gif图片压缩" aria-label="PREVIOUS: IOS Gif图片压缩">
           
               <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
               <i class="fa fa-angle-right"></i>
